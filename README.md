@@ -8,17 +8,28 @@ models and hardware, and two discovery lanes for emerging tools and new techniqu
 
 ## How it works
 
-Two scheduled Claude agents write into `editions/`; GitHub Actions builds and deploys
-the site. Nothing generated is committed, so the two agents can never conflict over
-build output.
+Anything that lands in `editions/` gets committed, pushed, and deployed. GitHub Actions
+builds the site from the fragments; nothing generated is committed, so no two writers
+can conflict over build output.
 
-| | Runs | Writes |
-|---|---|---|
-| **FDE Signal Scan** (cloud) | Mon/Wed/Thu 06:30 ET | `editions/<stem>.html` + `.md`, pushed right after publishing |
-| **Signal Scan local sync** (this Mac) | 09:00 and 16:00 weekdays | backfills any edition the cloud run missed |
+**Working now:** a launchd agent (`com.odi.signalscan-sync`, every 30 min plus at login)
+runs `sync-from-local.sh`, which pulls, commits anything new in `editions/`, and pushes.
+Actions then rebuilds and deploys. Drop an edition into `editions/` and it is live within
+half an hour, no manual step.
 
-The local sync is a catch-up job: it reconciles whatever is absent and does nothing
-when the archive is already complete. A missed run self-heals on the next one.
+**Not wired up yet:** the cloud **FDE Signal Scan** routine (Mon/Wed/Thu 06:30 ET) cannot
+push here until the GitHub account is connected to Claude — the routine API rejects a
+`git_repository` source with *"Connect your GitHub account before saving a routine that
+uses a GitHub repository."* Until that is done, editions reach this repo only by being
+placed in `editions/` by hand.
+
+### Why this repo is not in ~/Documents
+
+macOS TCC denies launchd agents access to `~/Documents`, `~/Desktop` and `~/Downloads` —
+both exec and read. An agent rooted in Documents cannot even start its own script, and a
+script elsewhere still cannot read Documents. So the drop point has to live outside those
+folders, which is why this is `~/signal-scan` and not next to `~/Documents/AI_newsletter`.
+The alternative would be granting Full Disk Access to `/bin/bash`, which is too broad.
 
 ## Layout
 
