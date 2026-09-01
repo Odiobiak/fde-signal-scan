@@ -2,3 +2,5 @@ _site/
 .DS_Store
 __pycache__/
 .sync.log
+.launchd.out.log
+.launchd.err.log
