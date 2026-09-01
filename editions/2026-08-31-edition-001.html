@@ -1,0 +1,537 @@
+<title>FDE Signal Scan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+  :root{
+    --paper:#F5F7F6; --card:#FFFFFF; --ink:#15191B; --muted:#5C6B67;
+    --line:#DDE3E0; --line-soft:#E9EEEC;
+    --accent:#0F7B62; --accent-soft:#E4F1ED;
+    --critical:#A32A22; --critical-soft:#F8E7E5;
+    --warn:#8A5A00; --warn-soft:#FBF0DC;
+    --info:#2C5C93; --info-soft:#E6EEF7;
+    --rail:#C9D4D0;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#101413; --card:#171C1B; --ink:#E8EDEB; --muted:#93A29E;
+      --line:#252D2B; --line-soft:#1E2523;
+      --accent:#3FBF9E; --accent-soft:#12312A;
+      --critical:#E98B80; --critical-soft:#3A1E1B;
+      --warn:#D9A441; --warn-soft:#332612;
+      --info:#8DB4E0; --info-soft:#17273A;
+      --rail:#2E3937;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#101413; --card:#171C1B; --ink:#E8EDEB; --muted:#93A29E;
+    --line:#252D2B; --line-soft:#1E2523;
+    --accent:#3FBF9E; --accent-soft:#12312A;
+    --critical:#E98B80; --critical-soft:#3A1E1B;
+    --warn:#D9A441; --warn-soft:#332612;
+    --info:#8DB4E0; --info-soft:#17273A;
+    --rail:#2E3937;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:16px; line-height:1.6; margin:0;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1060px; margin:0 auto; padding:0 28px 96px}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid color-mix(in srgb, var(--accent) 35%, transparent)}
+  a:hover{border-bottom-color:var(--accent)}
+  a:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+
+  /* ---- masthead ---- */
+  header.mast{border-bottom:2px solid var(--ink); padding:44px 0 20px; margin-bottom:34px}
+  .kicker{
+    font-family:"IBM Plex Mono",monospace; font-size:11.5px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 12px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+  h1{
+    font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:clamp(34px,5.4vw,52px);
+    line-height:1.02; letter-spacing:-.028em; margin:0 0 14px; text-wrap:balance;
+  }
+  .standfirst{font-size:17.5px; color:var(--muted); max-width:60ch; margin:0 0 26px}
+  .standfirst em{color:var(--ink); font-style:normal; font-weight:600}
+
+  .meterbar{display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--card)}
+  .meter{flex:1 1 150px; padding:13px 16px; border-right:1px solid var(--line-soft)}
+  .meter:last-child{border-right:0}
+  .meter .n{font-family:Archivo,sans-serif; font-weight:700; font-size:25px; line-height:1.1; font-variant-numeric:tabular-nums; display:block}
+  .meter .l{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); display:block; margin-top:3px}
+
+  /* ---- section headings ---- */
+  h2{
+    font-family:Archivo,sans-serif; font-weight:700; font-size:23px; letter-spacing:-.015em;
+    margin:0; text-wrap:balance;
+  }
+  .sechead{display:flex; align-items:baseline; gap:14px; border-bottom:1.5px solid var(--ink); padding-bottom:9px; margin:52px 0 4px}
+  .sechead .num{font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:12px; color:var(--muted); flex:none}
+  .sechead .cnt{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted); flex:none}
+  .secnote{color:var(--muted); font-size:14.5px; margin:12px 0 22px; max-width:62ch}
+
+  /* ---- act-now table ---- */
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:6px; background:var(--card)}
+  table{border-collapse:collapse; width:100%; min-width:660px; font-size:14.5px}
+  th{
+    text-align:left; font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:10.5px;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
+    padding:11px 16px; border-bottom:1px solid var(--line); white-space:nowrap;
+  }
+  td{padding:13px 16px; border-bottom:1px solid var(--line-soft); vertical-align:top}
+  tr:last-child td{border-bottom:0}
+  td.when{font-family:"IBM Plex Mono",monospace; font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; font-weight:500}
+  td.what{min-width:230px}
+  .past{color:var(--critical); font-weight:600}
+
+  /* ---- items ---- */
+  .item{
+    display:grid; grid-template-columns:4px 1fr; gap:0 20px;
+    margin:0 0 4px; padding:22px 0 24px; border-bottom:1px solid var(--line-soft);
+  }
+  .item:last-child{border-bottom:0}
+  .stripe{background:var(--rail); border-radius:2px}
+  .item[data-sev="critical"] .stripe{background:var(--critical)}
+  .item[data-sev="warn"] .stripe{background:var(--warn)}
+  .item[data-sev="ship"] .stripe{background:var(--accent)}
+  .item[data-sev="info"] .stripe{background:var(--info)}
+
+  .eyebrow{display:flex; flex-wrap:wrap; align-items:center; gap:9px; margin-bottom:9px}
+  .vendor{font-family:"IBM Plex Mono",monospace; font-size:11.5px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--ink)}
+  .when-in{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+  .chip{
+    font-family:"IBM Plex Mono",monospace; font-size:10px; font-weight:600; letter-spacing:.09em;
+    text-transform:uppercase; padding:2.5px 7px; border-radius:3px; white-space:nowrap;
+  }
+  .chip.ship{background:var(--accent-soft); color:var(--accent)}
+  .chip.brk{background:var(--critical-soft); color:var(--critical)}
+  .chip.sec{background:var(--critical-soft); color:var(--critical)}
+  .chip.dl{background:var(--warn-soft); color:var(--warn)}
+  .chip.prop{background:var(--info-soft); color:var(--info)}
+  .chip.comp{background:var(--info-soft); color:var(--info)}
+
+  h3{font-family:Archivo,sans-serif; font-weight:600; font-size:19.5px; line-height:1.28; letter-spacing:-.012em; margin:0 0 9px; text-wrap:balance}
+  .body{font-size:15.5px; margin:0; max-width:66ch; color:var(--ink)}
+  .why{
+    margin-top:13px; padding:12px 16px; background:var(--card);
+    border:1px solid var(--line); border-left:2px solid var(--accent); border-radius:0 5px 5px 0;
+    font-size:14.5px; max-width:68ch;
+  }
+  .why b{font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:5px}
+  .src{margin-top:11px; font-family:"IBM Plex Mono",monospace; font-size:12px; word-break:break-word}
+  .src span{color:var(--muted)}
+
+  .caution{
+    background:var(--warn-soft); border:1px solid color-mix(in srgb, var(--warn) 30%, transparent);
+    border-radius:6px; padding:16px 18px; margin:22px 0; font-size:14.5px; max-width:70ch;
+  }
+  .caution b{font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--warn); display:block; margin-bottom:6px}
+
+  /* ---- source health ---- */
+  .srcgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:9px; margin-top:20px}
+  .srccard{border:1px solid var(--line); border-radius:5px; padding:10px 13px; background:var(--card); font-size:13px}
+  .srccard .nm{font-weight:600; display:block; margin-bottom:2px}
+  .srccard .st{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase}
+  .st.live{color:var(--accent)} .st.quiet{color:var(--muted)} .st.blocked{color:var(--warn)}
+
+  ul.plain{margin:14px 0; padding-left:20px; max-width:68ch; font-size:15px}
+  ul.plain li{margin-bottom:8px}
+
+  footer{border-top:2px solid var(--ink); margin-top:64px; padding-top:26px; font-size:14px; color:var(--muted); max-width:70ch}
+  footer h4{font-family:Archivo,sans-serif; font-size:15px; color:var(--ink); margin:0 0 10px}
+
+  @media (max-width:640px){
+    .wrap{padding:0 18px 70px}
+    .item{grid-template-columns:3px 1fr; gap:0 14px}
+    .meter{flex:1 1 50%; border-bottom:1px solid var(--line-soft)}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="kicker"><span class="dot"></span>Edition 001 &nbsp;·&nbsp; scan window 25 Jul – 31 Aug 2026</p>
+  <h1>FDE Signal Scan</h1>
+  <p class="standfirst">What changed in voice models, agent protocols, orchestration frameworks and the CCaaS field, filtered to <em>one question</em>: does this change something you build, defend, or migrate?</p>
+
+  <div class="meterbar">
+    <div class="meter"><span class="n">34</span><span class="l">items kept</span></div>
+    <div class="meter"><span class="n">10</span><span class="l">dated deadlines</span></div>
+    <div class="meter"><span class="n">6</span><span class="l">breaking changes</span></div>
+    <div class="meter"><span class="n">3</span><span class="l">security items</span></div>
+    <div class="meter"><span class="n">22</span><span class="l">sources scanned</span></div>
+  </div>
+</header>
+
+<!-- ============ ACT ON THIS ============ -->
+<div class="sechead"><span class="num">§00</span><h2>Act on this</h2><span class="cnt">dated · sorted by urgency</span></div>
+<p class="secnote">Every row is a date a vendor published, not an estimate. The top row already happened.</p>
+
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Date</th><th>What</th><th>Who it hits</th><th>Vendor</th></tr></thead>
+  <tbody>
+    <tr><td class="when past">26 Aug 2026</td><td class="what">Assistants API <b>removed</b>, not deprecated. Threads and Assistants stopped working.</td><td>Any PoC or production build still on Assistants. Move to Responses + Conversations.</td><td>OpenAI</td></tr>
+    <tr><td class="when">02 Sep 2026</td><td class="what">Default speech model migrates to Universal-3.5 Pro.</td><td>Anything benchmarked against the AssemblyAI default. Re-baseline or pin the model.</td><td>AssemblyAI</td></tr>
+    <tr><td class="when">02 Sep 2026</td><td class="what">CXone 26.3 release window opens, slipped from 3 Aug by a change moratorium.</td><td>Any customer told to expect 26.3 features in August.</td><td>NiCE</td></tr>
+    <tr><td class="when">13 Sep 2026</td><td class="what">Flux TTS free period ends; standard per-character pricing begins.</td><td>Anyone piloting Flux on the free tier. Rate not published in the announcement.</td><td>Deepgram</td></tr>
+    <tr><td class="when">20 Oct 2026</td><td class="what">Sonic-2, Sonic-turbo and <span class="mono">sonic-3-2025-10-27</span> sunset.</td><td>Pinned Cartesia deployments. Repoint to <span class="mono">sonic-3.6</span>.</td><td>Cartesia</td></tr>
+    <tr><td class="when">05 Nov 2026</td><td class="what">CXone 26.3 release window closes.</td><td>Planning windows for CXone-dependent delivery.</td><td>NiCE</td></tr>
+    <tr><td class="when">16 Nov 2026</td><td class="what">Langfuse Cloud v3 support ends. Self-hosted gets security patches to Jan 2027 only.</td><td>Client observability stacks on v3. API v1 to v2 breaks custom dashboards and exports.</td><td>Langfuse</td></tr>
+    <tr><td class="when">31 Jan 2027</td><td class="what">LangSmith v1 API endpoints sunset. <span class="mono">POST /feedback/eager</span> already removed.</td><td>Custom LangSmith exports and compliance reporting.</td><td>LangChain</td></tr>
+    <tr><td class="when">26 Feb 2027</td><td class="what"><span class="mono">whisper-1</span>, <span class="mono">gpt-4o-transcribe</span>, <span class="mono">-mini-transcribe</span>, <span class="mono">-diarize</span> shut down.</td><td>Every Cognigy project pinned to that family. Put it on the account migration plan now.</td><td>OpenAI</td></tr>
+    <tr><td class="when">~28 Jul 2027</td><td class="what">MCP Dynamic Client Registration, Roots, Sampling and Logging leave the 12-month deprecation window.</td><td>Most enterprise MCP onboarding flows are built on DCR today.</td><td>MCP</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ============ PROTOCOLS ============ -->
+<div class="sechead"><span class="num">§01</span><h2>Protocols and interop</h2><span class="cnt">the big one this window</span></div>
+<p class="secnote">MCP shipped its largest breaking revision to date. A2A had no spec activity in the window at all, despite how often it is described as moving fast.</p>
+
+<div class="item" data-sev="critical">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Model Context Protocol</span><span class="when-in">28 Jul 2026</span><span class="chip brk">Breaking</span><span class="chip ship">Shipped</span></div>
+    <h3>Spec 2026-07-28 removes sessions, session IDs, and the initialize handshake</h3>
+    <p class="body">Protocol-level sessions and the <span class="mono">Mcp-Session-Id</span> header are gone, as is the <span class="mono">initialize</span> / <span class="mono">notifications/initialized</span> handshake. Every request now self-describes through <span class="mono">_meta</span> keys. A new <span class="mono">server/discover</span> RPC, which servers MUST implement, advertises supported versions and capabilities. Servers that need cross-call state must mint explicit handles passed as ordinary tool arguments.</p>
+    <div class="why"><b>Why it matters</b>Any MCP server behind a load balancer no longer needs sticky sessions, which is a genuine operational win. But conversational agents that leaned on server-side session state need re-architecting, and the handle you replace the session with now carries an authorization burden it did not have before. See the next item before you ship that refactor.</div>
+    <p class="src"><span>source ·</span> <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">modelcontextprotocol.io/specification/2026-07-28/changelog</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="critical">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Model Context Protocol</span><span class="when-in">28 Jul 2026</span><span class="chip sec">Security</span></div>
+    <h3>State handle hijacking: the new footgun statelessness created</h3>
+    <p class="body">The official security guidance replaces its Session Hijacking section with State Handle Hijacking. Servers MUST verify all inbound requests and MUST NOT treat possession of a state handle as authentication, and SHOULD bind handles server-side to the authenticated user, keying state as <span class="mono">&lt;user_id&gt;:&lt;handle&gt;</span> from the verified token rather than from client input. New sections also cover mix-up attacks, localhost redirect URI impersonation under CIMD, and SSRF against authorization servers.</p>
+    <div class="why"><b>Why it matters</b>This is the highest-value audit in the window. Teams will treat "remove sessions, pass a handle instead" as a transport chore and ship it. Done naively, that refactor silently converts an authenticated session into an unauthenticated bearer-ish identifier, which is a trivially exploitable cross-tenant IDOR. Check the binding before the SDK upgrade lands, not after.</div>
+    <p class="src"><span>source ·</span> <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices">modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="warn">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Model Context Protocol</span><span class="when-in">28 Jul 2026</span><span class="chip brk">Breaking</span><span class="chip dl">Deprecation</span></div>
+    <h3>Dynamic Client Registration deprecated in favour of Client ID Metadata Documents</h3>
+    <p class="body">OAuth 2.0 DCR (RFC 7591) is deprecated, retained only for authorization servers that lack CIMD. Authorization servers SHOULD emit the RFC 9207 <span class="mono">iss</span> parameter and clients MUST validate it before redeeming the code. Client credentials are now explicitly bound to their issuing authorization server: clients MUST key persisted credentials by issuer, MUST NOT reuse them across servers, and MUST re-register when the AS changes.</p>
+    <div class="why"><b>Why it matters</b>CIMD requires hosting a metadata document at a domain you control. That is a new deployment artefact and a new dependency for every client you ship into a customer environment, which makes it a procurement and hosting conversation, not just a code change. Start it early.</div>
+    <p class="src"><span>source ·</span> <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">modelcontextprotocol.io/specification/2026-07-28/changelog</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="warn">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Model Context Protocol</span><span class="when-in">28 Jul 2026</span><span class="chip brk">Breaking</span></div>
+    <h3>Transport: required routing headers, no SSE resumability, mandatory cache scoping</h3>
+    <p class="body"><span class="mono">Mcp-Method</span> and <span class="mono">Mcp-Name</span> headers are now required on Streamable HTTP POSTs. The HTTP GET endpoint and <span class="mono">resources/subscribe</span> are replaced by a single <span class="mono">subscriptions/listen</span> stream. SSE resumability is removed entirely: a broken response stream loses the in-flight request and clients MUST re-issue it with a new request ID. List and read results now require <span class="mono">ttlMs</span> and <span class="mono">cacheScope</span>.</p>
+    <div class="why"><b>Why it matters</b>Two opposite consequences. Good: your WAF and API gateway can enforce per-tool policy on headers alone without parsing JSON, which is a real enterprise win worth designing for. Bad: long-running tool calls over flaky corporate networks now fail hard instead of resuming, so idempotency has to move into your tool design. And <span class="mono">cacheScope: "public"</span> on a tool list that varies by tenant is a data-leak bug through any shared intermediary.</div>
+    <p class="src"><span>source ·</span> <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">modelcontextprotocol.io/specification/2026-07-28/changelog</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="warn">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Model Context Protocol</span><span class="when-in">28 Jul 2026</span><span class="chip brk">Breaking</span></div>
+    <h3>Elicitation is dead; Multi Round-Trip Requests replace server-initiated calls</h3>
+    <p class="body">MRTR replaces <span class="mono">roots/list</span>, <span class="mono">sampling/createMessage</span> and <span class="mono">elicitation/create</span>. Servers return an <span class="mono">InputRequiredResult</span> with an <span class="mono">inputRequests</span> field; clients respond with <span class="mono">inputResponses</span> on a retry of the original request. All results now carry a required <span class="mono">resultType</span>. The <span class="mono">notifications/elicitation/complete</span> notification and <span class="mono">elicitationId</span> are removed.</p>
+    <div class="why"><b>Why it matters</b>This lands directly on conversational agents. Any "I need one more field from the user" flow must be rewritten as an idempotent retry rather than a callback, meaning your tool handlers have to tolerate repeated invocation with accumulating input. A server correlating an elicitation across retries now has to encode its own identifier in <span class="mono">requestState</span>.</div>
+    <p class="src"><span>source ·</span> <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/mrtr">modelcontextprotocol.io/specification/2026-07-28/basic/patterns/mrtr</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="critical">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">CVE-2026-75130 / CVE-2026-81094</span><span class="when-in">18 &amp; 27 Aug 2026</span><span class="chip sec">Security</span></div>
+    <h3>Two in-window MCP CVEs: prompt injection in Context7, open-by-default binding in mcp-router</h3>
+    <p class="body">Context7 through 2.1.2 carries a prompt injection allowing malicious instructions to execute in connected coding agents via unsanitized Custom AI Instructions served through its MCP server, enabling credential exfiltration and destructive file operations. NVD records CVSS v3.1 9.0 but CVSS v4.0 6.4. Separately, mcp-router before 0.6.3 bound its aggregator to all network interfaces by default and only enforced authentication when an operator explicitly configured it.</p>
+    <div class="why"><b>Why it matters</b>Context7 is the cleanest available argument for the rule that MCP tool <em>results</em> are untrusted data. Know the 9.0 versus 6.4 score divergence before a customer security team quotes one number at you. The mcp-router pattern is the one to check for in any MCP proxy deployed into a customer network, because the aggregator holds the union of every downstream credential.</div>
+    <p class="src"><span>sources ·</span> <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-75130">nvd.nist.gov/vuln/detail/CVE-2026-75130</a> &nbsp;·&nbsp; <a href="https://www.ionix.io/threat-center/cve-2026-81094/">ionix.io/threat-center/cve-2026-81094</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="info">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Model Context Protocol</span><span class="when-in">22 Aug 2026</span><span class="chip prop">Proposed</span></div>
+    <h3>Roadmap signals progressive tool discovery and DPoP-based workload identity</h3>
+    <p class="body">Five working-group areas: agentic messaging primitives via webhooks and channels, HTTP transport unification to replace stdio, agent identity and security through DPoP and Workload Identity Federation, improved primitives including standardized tool result contracts and progressive discovery for large tool catalogs, and SDK conformance. None of this is in a specification yet.</p>
+    <div class="why"><b>Why it matters</b>Two things to plan around. Progressive discovery is the admission that dumping 200 enterprise tools into one <span class="mono">tools/list</span> does not scale, so if you are hitting that today expect a standard answer within roughly two revisions and avoid over-engineering a private workaround. DPoP and WIF are the answer to the service-to-service auth question large customers keep asking, without long-lived bearer tokens.</div>
+    <p class="src"><span>source ·</span> <a href="https://blog.modelcontextprotocol.io/posts/mcp-roadmap/">blog.modelcontextprotocol.io/posts/mcp-roadmap</a></p>
+  </div>
+</div>
+
+<div class="caution">
+  <b>Correction worth carrying into meetings</b>
+  A2A shipped nothing between 25 July and 31 August 2026. The last releases were v1.0.0 in March and v1.0.1 in May. The widely-cited Linux Foundation "150+ organizations" milestone is dated 9 April 2026 and is regularly mis-quoted as recent. Similarly, "WebMCP is an official W3C standard" could not be confirmed from any primary source. If a competitor or a customer leads with A2A momentum, the dates are on your side.
+</div>
+
+<!-- ============ VOICE ============ -->
+<div class="sechead"><span class="num">§02</span><h2>Voice and speech models</h2><span class="cnt">the layer your calls run on</span></div>
+<p class="secnote">A heavy window. Note the sampling bias before reading anything into item counts: Deepgram publishes a dated, granular changelog and most competitors do not.</p>
+
+<div class="item" data-sev="critical">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Deepgram</span><span class="when-in">12 Aug 2026</span><span class="chip ship">GA</span><span class="chip brk">Silent default change</span></div>
+    <h3>Flux TTS goes GA and quietly replaces Aura as the Voice Agent default</h3>
+    <p class="body">Model IDs take the form <span class="mono">flux-{voice}-{language}</span>, with 36 English voices across 7 accents, English only at launch. Deepgram states it begins responding in as low as 80 ms, bills per synthesized character, and exposes an <span class="mono">Interrupt</span> operation returning <span class="mono">text_spoken</span> and <span class="mono">text_remaining</span>. Omitting <span class="mono">agent.speak</span> now yields <span class="mono">flux-kit-en</span> rather than an Aura voice.</p>
+    <div class="why"><b>Why it matters</b>Any Voice Gateway or Deepgram agent config that relied on Aura <em>by omission</em> now speaks in a different voice. That is a brand defect a customer notices before you do. The <span class="mono">Interrupt</span> playback-offset response is genuinely useful for barge-in bookkeeping, since it tells you exactly what the caller heard before cutting in. Two open questions the GA post does not answer: 8 kHz μ-law and A-law telephony output, and the concurrency ceiling (45 streaming connections on pay-as-you-go NA, 5 in EU and AU) which is a hard blocker for load tests.</div>
+    <p class="src"><span>source ·</span> <a href="https://deepgram.com/learn/flux-tts-what-ships-at-ga">deepgram.com/learn/flux-tts-what-ships-at-ga</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="ship">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Deepgram</span><span class="when-in">26 &amp; 28 Aug 2026</span><span class="chip ship">Shipped</span></div>
+    <h3>Turn-taking finally gets manual control: ForceEndTurn and eot_threshold</h3>
+    <p class="body">Flux now supports three turn-taking modes: automatic detection, semi-manual with a <span class="mono">{"type":"ForceEndTurn"}</span> override, and fully manual where <span class="mono">eot_threshold=1.0</span> suppresses native detection entirely. The threshold can change mid-stream via a <span class="mono">Configure</span> message without reconnecting, and <span class="mono">EndOfTurn</span> events now carry a <span class="mono">trigger</span> field valued <span class="mono">model</span>, <span class="mono">manual</span> or <span class="mono">timeout</span>. Backward compatible.</p>
+    <div class="why"><b>Why it matters</b>The most operationally useful item in the window. Endpointing is where PSTN deployments actually fail: DTMF entry, push-to-talk, IVR handoffs, long alphanumeric account numbers. Being able to force turn-end on a DTMF signal or suppress model endpointing per turn removes the entire "agent interrupts the caller mid-account-number" defect class. The <span class="mono">trigger</span> field also gives you clean attribution for turn-boundary errors in call analytics.</div>
+    <p class="src"><span>source ·</span> <a href="https://developers.deepgram.com/changelog/2026/8/28">developers.deepgram.com/changelog/2026/8/28</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="warn">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Deepgram</span><span class="when-in">31 Jul 2026</span><span class="chip ship">Shipped</span><span class="chip brk">New failure mode</span></div>
+    <h3>Mid-session language switching, per-turn STT latency, and a 2-hour session cap</h3>
+    <p class="body"><span class="mono">UpdateListen</span> now switches STT model and language mid-session without restarting. <span class="mono">LatencyReport</span> gained <span class="mono">stt_latency</span>, completing the STT to LLM to TTS breakdown per turn. Voice Agent sessions now auto-close after 2 hours, with a warning at 1h55m; <span class="mono">KeepAlive</span> cannot extend it.</p>
+    <div class="why"><b>Why it matters</b>Mid-session language switching is the clean answer to multilingual routing without tearing down the media session, which matters for any EU or DACH deployment where the caller switches language after the IVR. Per-turn <span class="mono">stt_latency</span> is exactly what you need to defend a latency SLA and prove whether ASR, the LLM or TTS is the culprit. The 2-hour cap is a new failure mode: audit long-hold, warm-transfer and agent-assist scenarios, and handle the 1h55m warning explicitly.</div>
+    <p class="src"><span>source ·</span> <a href="https://developers.deepgram.com/changelog/2026/7/31">developers.deepgram.com/changelog/2026/7/31</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="warn">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">OpenAI</span><span class="when-in">28 Jul 2026</span><span class="chip ship">Shipped</span><span class="chip dl">Deadline</span></div>
+    <h3>GPT-Transcribe and GPT-Live-Transcribe ship; the whisper-1 family gets a shutdown date</h3>
+    <p class="body">Both accept free-form transcription context, keyword hints, prior dialogue and multiple expected input languages. Reported figures: 19.70% error rate versus 20.33% on Common Voice across 22 languages, and 9.60% versus 11.65% on a real-world benchmark across nine languages. The 26 August changelog sets the shutdown of <span class="mono">whisper-1</span> and the <span class="mono">gpt-4o-transcribe</span> family at 26 February 2027.</p>
+    <div class="why"><b>Why it matters</b>Keyword hints plus free-form context is the practical fix for the perennial enterprise problem of product names, policy numbers and agent names being mistranscribed. But the deprecation is the action item: every Cognigy deployment or PoC pinned to that family has a hard deadline. Pricing, per-model latency and the full language list are not stated in the announcement.</div>
+    <p class="src"><span>source ·</span> <a href="https://developers.openai.com/api/docs/changelog">developers.openai.com/api/docs/changelog</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="info">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Google</span><span class="when-in">26 Aug 2026</span><span class="chip ship">GA</span></div>
+    <h3>Gemini 3.5 Transcribe and Transcribe Live go GA, with a 10-minute streaming ceiling</h3>
+    <p class="body">Two dedicated STT models: a non-streaming high-accuracy model with utterance-based language detection across 85+ languages, and a low-latency bidirectional streaming model over WebSockets. File mode supports word-level timestamps, diarization up to 8 speakers, and custom vocabulary biasing up to 1,000 terms. Live streaming supports biasing and smart formatting but not timestamps or diarization, and is capped at 10 minutes per session.</p>
+    <div class="why"><b>Why it matters</b>Strong on paper for product-name and SKU-heavy enterprise vocabularies, and mid-session code-switching across 85+ languages is a real differentiator. But the 10-minute live session limit rules it out for most contact-centre calls without reconnect-and-stitch logic that risks losing context at the seam, and no streaming diarization rules it out for real-time agent-assist on merged audio. Worth knowing, not worth proposing yet.</div>
+    <p class="src"><span>source ·</span> <a href="https://ai.google.dev/gemini-api/docs/models/gemini-3.5-transcribe">ai.google.dev/gemini-api/docs/models/gemini-3.5-transcribe</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="ship">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Cartesia</span><span class="when-in">27 Aug 2026</span><span class="chip ship">GA</span></div>
+    <h3>Sonic-3.6: 44 languages, 61 locales, pinnable dated model IDs</h3>
+    <p class="body">Pinnable as <span class="mono">sonic-3.6-2026-08-27</span>, with Odia and Urdu added, 500+ preset voices, and Hindi-English code-switching. Cartesia claims replies under 90 ms, generation nearly 2x faster than v3 Conversational, a 99.9% uptime SLA, and top placement on the Artificial Analysis speech leaderboard. Existing voice clones carry over. Sonic-2 and Sonic-turbo sunset after 20 October 2026.</p>
+    <div class="why"><b>Why it matters</b>Best language-coverage-per-latency story in the window for multilingual EMEA voice work, and the pinnable dated ID is the right pattern for production stability. Unlike Flux it is not auto-default, so traffic must be repointed manually: no surprise voice change, but no free upgrade either. Preference-test claims are vendor-run; treat them as marketing, not procurement evidence. Telephony codec support is unconfirmed.</div>
+    <p class="src"><span>source ·</span> <a href="https://www.cartesia.ai/blog/sonic-3.6">cartesia.ai/blog/sonic-3.6</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="info">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">ElevenLabs · AssemblyAI</span><span class="when-in">Aug 2026</span><span class="chip ship">Shipped</span></div>
+    <h3>Two tuning knobs worth knowing, and one default migration to pin against</h3>
+    <p class="body">ElevenLabs shipped no new TTS or STT model this window. It did ship Scribe v2 Realtime entity detection emitting <span class="mono">committed_transcript_entities</span>, and <span class="mono">merge_with_default_ignore_terms</span> for interruption terms. AssemblyAI shipped tool-parameter guardrails for Voice Agent tool calls, reporting hallucinated arguments dropping from 2.5% to 0%, and fixed a Playground bug that had silently disabled adaptive turn detection.</p>
+    <div class="why"><b>Why it matters</b>Realtime entity detection means structured PII extraction at the ASR layer, before your NLU sees it, which is useful for both redaction and slot-filling. <span class="mono">merge_with_default_ignore_terms</span> is a barge-in knob letting you add domain filler terms that should <em>not</em> count as an interruption. AssemblyAI's guardrail targets the top failure mode in voice-driven API calls (wrong account, wrong date), though the 2.5% to 0% figure is self-reported on an unspecified test set.</div>
+    <p class="src"><span>sources ·</span> <a href="https://elevenlabs.io/docs/changelog">elevenlabs.io/docs/changelog</a> &nbsp;·&nbsp; <a href="https://www.assemblyai.com/changelog">assemblyai.com/changelog</a></p>
+  </div>
+</div>
+
+<div class="caution">
+  <b>Open question across every new TTS model this window</b>
+  8 kHz μ-law and A-law telephony output is unconfirmed for Flux TTS, Sonic-3.6 and Gemini Transcribe Live. None of the primary announcements addressed it. For Voice Gateway work this is the highest-value follow-up in the whole scan, and it has to be verified against API reference docs rather than blog posts. No pricing figures were published for Gemini 3.5 Transcribe, GPT-Transcribe or Sonic-3.6 either.
+</div>
+
+<!-- ============ COGNIGY ============ -->
+<div class="sechead"><span class="num">§03</span><h2>Cognigy and the CCaaS field</h2><span class="cnt">your platform and your competitors</span></div>
+<p class="secnote">The most commercially significant item in the entire scan is in this section, and it is not a feature.</p>
+
+<div class="item" data-sev="ship">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Cognigy 2026.16</span><span class="when-in">4 Aug 2026</span><span class="chip ship">GA</span></div>
+    <h3>NiCE CXone handover providers exit beta; Context object jumps 65 kB to 256 kB</h3>
+    <p class="body">The beta designation is removed from the NiCE CXone handover providers. The Context object limit expands fourfold, the Snapshot and Package upload limit rises to 8 GB, endpoint auth standardises on the <span class="mono">x-cognigy-endpoint-key</span> header, and Genesys Cloud Open Messaging handover gains real-time queue notifications with live estimated wait time. Voice Gateway adds Deepgram region selection and a Model Improvement Program opt-in.</p>
+    <div class="why"><b>Why it matters</b>CXone handover going GA removes the "it's still beta" objection from every CXone plus Cognigy deal, which is worth more than any feature this window. The 4x Context limit unblocks data-heavy agent designs that previously needed external state. Two watch-outs: the <span class="mono">x-cognigy-endpoint-key</span> standardisation is a breaking risk for customer integrations still sending legacy auth headers, and the Deepgram Model Improvement Program opt-in trades call audio for training in exchange for reduced cost. Confirm every regulated customer is explicitly opted out and that it is documented, because that is exactly the setting that surfaces in a security review after the fact.</div>
+    <p class="src"><span>source ·</span> <a href="https://docs.cognigy.com/release-notes/2026.16">docs.cognigy.com/release-notes/2026.16</a> &nbsp;<span>· docs and marketing pages disagree on the date (4 vs 14 Aug); docs treated as authoritative</span></p>
+  </div>
+</div>
+
+<div class="item" data-sev="ship">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Cognigy 2026.17</span><span class="when-in">18 Aug 2026</span><span class="chip ship">Shipped</span></div>
+    <h3>New frontier models, MCP OAuth config fix, handover timing fixes</h3>
+    <p class="body">Adds Google <span class="mono">gemini-3.6-flash</span> and <span class="mono">gemini-3.5-flash-lite</span>, and Anthropic <span class="mono">claude-sonnet-5</span>, <span class="mono">claude-opus-4-7</span> and <span class="mono">claude-opus-4-8</span>. Adds an Azure OpenAI deployment-name toggle plus Custom Model and Request Options on LLM Entity Extract and Question nodes. Fixes the MCP Server Endpoint OAuth 2.0 config accepting an empty Key Refresh Interval, a handover-provider duplicate-message bug, and NiCE CXone provider script-name timing. Transformer error logs now include <span class="mono">traceId</span> and <span class="mono">sessionId</span>.</p>
+    <div class="why"><b>Why it matters</b>Three items hit real customer flows: the CXone handover script-name timing fix, the duplicate-message fix, and the MCP OAuth empty-interval fix which removes a config trap when wiring MCP tools. The new model IDs are what customers will ask you to switch to. The <span class="mono">traceId</span> and <span class="mono">sessionId</span> addition to transformer errors materially improves production debugging and is worth adopting in your standard logging pattern.</div>
+    <p class="src"><span>source ·</span> <a href="https://docs.cognigy.com/release-notes/2026.17">docs.cognigy.com/release-notes/2026.17</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="critical">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Genesys</span><span class="when-in">24 &amp; 31 Aug 2026</span><span class="chip comp">Competitive</span></div>
+    <h3>Genesys makes agentic virtual agents CI/CD-native and scriptable by AI coding agents</h3>
+    <p class="body">Public APIs now create, read, update, delete and publish agentic virtual agent configurations using structured schemas, explicitly positioned against JSON-blob contracts and aimed at CI/CD pipelines and programmatic provisioning. Alongside it, spec-driven development lets external AI coding agents design, build, test and iterate AVAs via published agent skills, with temporary Python stubs for testing before backends exist. The 31 August release adds Deepgram Flux and Nova native ASR.</p>
+    <div class="why"><b>Why it matters</b>The sharpest competitive item in the scan. Genesys is pitching directly at the platform-engineering buyer, and this is exactly the ground where Cognigy's API, Snapshot and Package story has to hold up. Expect "can I manage Cognigy agents from CI/CD and let a coding agent build them?" in your next technical evaluation, and have the answer ready. The counter-position is real: Cognigy's 2026.15 Genesys Audio Connector lets you sit inside Genesys estates while Genesys pushes customers toward its native AVA.</div>
+    <p class="src"><span>source ·</span> <a href="https://help.genesys.cloud/release-notes/genesys-cloud/august-24-2026/">help.genesys.cloud/release-notes/genesys-cloud/august-24-2026</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="warn">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">IDC MarketScape</span><span class="when-in">21 &amp; 27 Aug 2026</span><span class="chip comp">Competitive</span></div>
+    <h3>Five9 and Talkdesk both announce Leader placement in Agentic CCaaS. NiCE's placement is unconfirmed.</h3>
+    <p class="body">IDC placed Five9 in the Leaders category of the Worldwide Agentic Contact Center-as-a-Service Platforms 2026 Vendor Assessment (doc #US54117326). Talkdesk announced Leader placement in the same report plus Worldwide Insurance Customer Experience Platforms 2026. Both announcements quote IDC describing the vendor as a strong fit for midmarket and enterprise in financial services, healthcare and retail.</p>
+    <div class="why"><b>Why it matters</b>Competitors will lead with this in Q4 deals. The gap to close is internal, not external: find out where NiCE placed in this same MarketScape before a customer asks, because "Five9 and Talkdesk both announced Leader and NiCE didn't" is the kind of absence that gets weaponised even when the underlying placement is fine. Also note Talkdesk's second placement: the market is starting to price vertical depth, not just platform capability.</div>
+    <p class="src"><span>source ·</span> <a href="https://www.globenewswire.com/news-release/2026/08/21/3349080/0/en/talkdesk-named-a-leader-in-two-2026-idc-marketscape-vendor-assessments.html">globenewswire.com · Talkdesk IDC announcement</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="info">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">NiCE · Zendesk</span><span class="when-in">5 &amp; Aug 2026</span><span class="chip info">Context</span></div>
+    <h3>NiCE reports record AI bookings; Zendesk bundles AI triage down-market</h3>
+    <p class="body">NiCE reported Q2 revenue of $782.3M, cloud growth of 12.6% year over year, and AI ARR of $362M representing 15% of cloud revenue, with the CEO describing an all-time record quarter for AI bookings and strong momentum at NiCE Cognigy. Separately, Zendesk moved Copilot intelligent triage into Suite and Support Professional plans and above, and extended auto assist to draw on Confluence, Notion and web crawlers.</p>
+    <div class="why"><b>Why it matters</b>The $362M AI ARR figure and the "Cognigy embedded natively into CXone" framing are now the official corporate line, so align your architecture narrative to it. It also signals where delivery pressure lands next: bookings converting at record rate means FDE capacity, not product capability, becomes the constraint. On Zendesk, the packaging move is the threat rather than the features, because bundling AI triage into mid-tier plans pressures per-resolution pricing across the market.</div>
+    <p class="src"><span>source ·</span> <a href="https://www.nice.com/press-releases/nice-exceeds-revenue-guidance-range-reporting-8-year-over-year-revenue-growth-in-second-quarter-2026">nice.com · Q2 2026 results</a></p>
+  </div>
+</div>
+
+<!-- ============ FRAMEWORKS ============ -->
+<div class="sechead"><span class="num">§04</span><h2>Frameworks, eval and observability</h2><span class="cnt">what you build on and prove with</span></div>
+<p class="secnote">One convergence worth noticing: three independent eval vendors moved from scoring single calls to scoring whole sessions within two weeks of each other.</p>
+
+<div class="item" data-sev="critical">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">OpenAI Agents SDK</span><span class="when-in">11 &amp; 19 Aug 2026</span><span class="chip brk">Breaking</span><span class="chip sec">Security fix</span></div>
+    <h3>Default model changes silently in v0.20.0; guardrail-blocked output was leaking into persisted state</h3>
+    <p class="body">v0.20.0 made <span class="mono">gpt-5.6-luna</span> the implicit default model and migrated MCP dependencies, requiring apps with custom MCP HTTP auth to pin <span class="mono">mcp&lt;2</span> or adopt v2 types. v0.22.0 rejects conflicting provider options when <span class="mono">OpenAIProvider</span> receives an explicit client, and redacts terminal function-tool output rejected by output guardrails from replayable and persisted SDK state.</p>
+    <div class="why"><b>Why it matters</b>The silent default-model change is the classic enterprise landmine: an unpinned client deployment changes model, cost and behaviour on a <span class="mono">pip install</span>. Mandate explicit model pinning in every client repo. The guardrail redaction is the more serious story: previously, tool output a guardrail <em>blocked</em> could still land in persisted state, meaning the blocked content was recoverable from checkpoints and traces. If a client runs output guardrails as a compliance control on an older SDK, that control was leaking into durable storage. Audit what your checkpointer persists, in any framework.</div>
+    <p class="src"><span>source ·</span> <a href="https://github.com/openai/openai-agents-python/releases/tag/v0.22.0">github.com/openai/openai-agents-python/releases/tag/v0.22.0</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="warn">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Langfuse</span><span class="when-in">17 Aug 2026</span><span class="chip brk">Breaking</span><span class="chip dl">Deadline</span></div>
+    <h3>Langfuse v4 restructures storage; Cloud v3 support ends 16 November</h3>
+    <p class="body">One denormalized observations table replaces v3's read-time joins, in an append-only design removing query-time deduplication, with claims of at least 10x faster dashboards on large projects. New: Monitors with threshold notifications, deterministic code evaluators, full-text search, and Observations and Metrics API v2. Minimum SDKs are Python 4.7.0 and JS/TS 5.4.0. Self-hosted has no forced cutover but v3 security patches end January 2027.</p>
+    <div class="why"><b>Why it matters</b>A hard-dated migration on the observability layer, which is always the last thing anyone budgets for. Clients on Langfuse Cloud v3 have roughly eleven weeks from the release. The API v1 to v2 change breaks any custom dashboard or compliance export built on the old schema. Self-hosted clients get a longer runway and then sit on unpatched software after January 2027, which belongs in a risk register now rather than at renewal.</div>
+    <p class="src"><span>source ·</span> <a href="https://langfuse.com/changelog/2026-08-17-langfuse-v4">langfuse.com/changelog/2026-08-17-langfuse-v4</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="ship">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">LangChain · Braintrust · CrewAI</span><span class="when-in">Aug 2026</span><span class="chip ship">Shipped</span></div>
+    <h3>The eval layer converged on sessions, and two silent-telemetry bugs got fixed</h3>
+    <p class="body">LangSmith expanded annotation queues to thread items with bulk operations. Braintrust shipped trace groups so a dataset row references a group of traces rather than one, plus group-scoped online scoring. CrewAI promoted conversational flows to stable and fixed task failures being recorded as successes. LangSmith also fixed custom code evaluators that timed out silently rather than recording errors.</p>
+    <div class="why"><b>Why it matters</b>Three independent vendors moving the same direction in two weeks is a strong signal that per-turn evaluation is now considered inadequate for agents. If a client's eval strategy still scores individual LLM calls, it is behind the tooling. The two bug fixes are the sharper item: any client reporting CrewAI success rates before 27 August was reading inflated numbers, and any eval suite on an older LangSmith build may have shown green while evaluators timed out. Both undermine every reliability claim built on that telemetry.</div>
+    <p class="src"><span>sources ·</span> <a href="https://docs.langchain.com/langsmith/changelog">docs.langchain.com/langsmith/changelog</a> &nbsp;·&nbsp; <a href="https://www.braintrust.dev/docs/reference/changelog">braintrust.dev/docs/reference/changelog</a> &nbsp;·&nbsp; <a href="https://docs.crewai.com/en/changelog">docs.crewai.com/en/changelog</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="ship">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">Microsoft</span><span class="when-in">26 &amp; 27 Aug 2026</span><span class="chip ship">Shipped</span></div>
+    <h3>Agent Framework channels expose one agent as MCP server and A2A peer; plus a citable security position</h3>
+    <p class="body">Five hosting packages expose an agent or workflow over OpenAI Responses, Telegram, A2A and MCP, with the framework handling protocol conversion at the boundary while the application retains routing, authentication and authorization. A companion post on production readiness states plainly that giving the model arbitrary read/write access to the container filesystem, or letting it run shell commands, is a serious security risk, and recommends routing file operations through external storage abstractions.</p>
+    <div class="why"><b>Why it matters</b>"One governed agent, many front doors" is a real architectural lever for clients who want one agent reachable from Teams, a contact-centre channel and other agents without three implementations. The caveat is that A2A and MCP hosting turn an internal agent into a network-reachable endpoint and Microsoft explicitly leaves authn/authz to you. The security post is the more immediately useful artefact: a named vendor stating on record that agent shell access is a serious risk is exactly the citation you want when pushing back on a client or a competing integrator proposing it "for flexibility."</div>
+    <p class="src"><span>source ·</span> <a href="https://devblogs.microsoft.com/agent-framework/agent-harness-making-your-claw-production-ready/">devblogs.microsoft.com/agent-framework/agent-harness-making-your-claw-production-ready</a></p>
+  </div>
+</div>
+
+<div class="item" data-sev="info">
+  <div class="stripe"></div>
+  <div>
+    <div class="eyebrow"><span class="vendor">LangGraph</span><span class="when-in">Jul–Aug 2026</span><span class="chip info">Quiet</span></div>
+    <h3>LangGraph shipped patches only, and 1.4.0 alphas appeared at end of August</h3>
+    <p class="body">langgraph 1.2.10 and 1.2.11, langchain 1.3.15 through 1.3.18, with no breaking changes documented. Substantive items: <span class="mono">trace_policy</span> exposed on <span class="mono">add_node</span>, a checkpoint fix collecting writes at plain-value seed in delta channel history, and releases of <span class="mono">langgraph-checkpoint</span> 4.2.0 and <span class="mono">langgraph-checkpoint-postgres</span> 3.1.2. langchain 1.4.0a1 and a2 appeared 27 to 28 August.</p>
+    <div class="why"><b>Why it matters</b>Good news to put in front of a client: the framework most enterprise agent builds sit on had a quiet, stability-focused six weeks precisely while OpenAI and Langfuse were moving underneath. If you run Postgres persistence, checkpoint 4.2.0 carries a delta-channel history fix affecting replay correctness. Watch 1.4.0: alphas at end of August means a minor with possible migration work is likely in September or October, so do not let a client start a long build on 1.3.x without a version policy.</div>
+    <p class="src"><span>source ·</span> <a href="https://docs.langchain.com/oss/python/releases/changelog">docs.langchain.com/oss/python/releases/changelog</a></p>
+  </div>
+</div>
+
+<div class="caution">
+  <b>Blind spot: portable agent telemetry is in limbo</b>
+  All <span class="mono">gen_ai.*</span> attributes were deprecated out of the main OpenTelemetry semantic conventions repo in June 2026 and moved to a dedicated GenAI repo, which has shipped zero releases since. Meanwhile Pydantic AI v2 moved to its own instrumentation version 5 naming and Microsoft's harness guidance assumes OTel export. Any client betting on vendor-neutral, portable agent telemetry right now is betting on a spec in limbo. Design the collector layer so attribute renaming is a config change, not a rewrite.
+</div>
+
+<!-- ============ SOURCE HEALTH ============ -->
+<div class="sechead"><span class="num">§05</span><h2>Source health</h2><span class="cnt">what was scanned, and what went quiet</span></div>
+<p class="secnote">A source that goes silent is the most common way a digest like this fails without anyone noticing. This panel exists so silence is visible rather than assumed.</p>
+
+<div class="srcgrid">
+  <div class="srccard"><span class="nm">Deepgram changelog</span><span class="st live">live · 12 entries</span></div>
+  <div class="srccard"><span class="nm">MCP spec + blog</span><span class="st live">live · major revision</span></div>
+  <div class="srccard"><span class="nm">Cognigy release notes</span><span class="st live">live · 2 releases</span></div>
+  <div class="srccard"><span class="nm">OpenAI changelog</span><span class="st live">live · 3 entries</span></div>
+  <div class="srccard"><span class="nm">Cartesia changelog</span><span class="st live">live · 1 GA</span></div>
+  <div class="srccard"><span class="nm">ElevenLabs changelog</span><span class="st live">live · 4 weeklies</span></div>
+  <div class="srccard"><span class="nm">AssemblyAI changelog</span><span class="st live">live · 3 entries</span></div>
+  <div class="srccard"><span class="nm">Genesys release notes</span><span class="st live">live · 3 entries</span></div>
+  <div class="srccard"><span class="nm">Langfuse changelog</span><span class="st live">live · v4</span></div>
+  <div class="srccard"><span class="nm">LangSmith changelog</span><span class="st live">live · weekly</span></div>
+  <div class="srccard"><span class="nm">CrewAI changelog</span><span class="st live">live · 7 releases</span></div>
+  <div class="srccard"><span class="nm">MS Agent Framework</span><span class="st live">live · 2 posts</span></div>
+  <div class="srccard"><span class="nm">A2A releases</span><span class="st quiet">quiet · nothing since May</span></div>
+  <div class="srccard"><span class="nm">LlamaIndex</span><span class="st quiet">quiet · 1 release, changelog stale since Mar</span></div>
+  <div class="srccard"><span class="nm">Azure AI Speech</span><span class="st quiet">quiet · no Aug notes</span></div>
+  <div class="srccard"><span class="nm">Google Cloud STT (Chirp)</span><span class="st quiet">quiet · nothing since Nov 2025</span></div>
+  <div class="srccard"><span class="nm">Anthropic engineering</span><span class="st quiet">quiet · no in-window posts</span></div>
+  <div class="srccard"><span class="nm">OTel GenAI semconv</span><span class="st quiet">quiet · zero releases in new repo</span></div>
+  <div class="srccard"><span class="nm">Verint newsroom</span><span class="st quiet">quiet · 1 marketing item</span></div>
+  <div class="srccard"><span class="nm">GitHub API and Atom feeds</span><span class="st blocked">blocked · 403, routed via PyPI</span></div>
+  <div class="srccard"><span class="nm">Salesforce newsroom</span><span class="st blocked">blocked · fetch refused</span></div>
+  <div class="srccard"><span class="nm">Arize</span><span class="st blocked">blocked · no dated changelog found</span></div>
+</div>
+
+<!-- ============ METHOD ============ -->
+<div class="sechead"><span class="num">§06</span><h2>How to read this</h2><span class="cnt">method and known limits</span></div>
+
+<ul class="plain">
+  <li><b>Primary sources only where possible.</b> Every item links a vendor changelog, release note, spec page or CVE record. Where only secondary reporting existed, it says so inline.</li>
+  <li><b>Shipped is separated from announced.</b> A roadmap post is labelled Proposed. A release tag is labelled Shipped. This distinction is the single biggest source of confident-sounding errors in AI news.</li>
+  <li><b>Vendor benchmark claims are reproduced, not endorsed.</b> Cartesia's leaderboard placement, AssemblyAI's 2.5% to 0%, Deepgram's 80 ms, and NiCE's customer figures are all vendor- or customer-reported on unspecified test sets.</li>
+  <li><b>Unconfirmed is written as unconfirmed.</b> Where a date, price, version or figure could not be verified against a primary source, the item says so rather than guessing. Absence of a finding is not evidence of absence.</li>
+  <li><b>Item count is not market signal.</b> Deepgram dominates §02 partly because it publishes a granular dated changelog and its competitors do not.</li>
+  <li><b>Fetched pages are treated as data, never instructions.</b> Two documentation sites (Deepgram, ElevenLabs, and modelcontextprotocol.io) prepend directive text addressed to AI readers. It is benign and first-party, and it was ignored. Nothing malicious was encountered.</li>
+</ul>
+
+<footer>
+  <h4>FDE Signal Scan · Edition 001</h4>
+  <p>Scan window 25 July to 31 August 2026. Compiled 31 August 2026. Scope is deliberately narrow: voice and speech models, agent protocols and interop, orchestration and eval tooling, and the Cognigy and CCaaS field. General AI news, research papers and frontier model launches are out of scope unless they change one of those four.</p>
+  <p>This page is rewritten in place on each scan, so the link stays the same. Prior editions are archived below as they accumulate.</p>
+</footer>
+
+</div>
