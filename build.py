@@ -27,6 +27,8 @@ OUT = ROOT / "_site"
 STEM_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})-edition-(\d+)$")
 TITLE_RE = re.compile(r"<title>(.*?)</title>\s*", re.I | re.S)
 LINK_RE = re.compile(r"<link\b[^>]*\brel=[\"']?stylesheet[\"']?[^>]*>\s*", re.I)
+BODY_OPEN_RE = re.compile(r"<body[^>]*>", re.I)
+BODY_CLOSE_RE = re.compile(r"</body\s*>\s*</html\s*>\s*$", re.I)
 
 # Mirrors the artifact host's skeleton: charset + viewport, light/dark color-scheme,
 # zero body margin, 14px system font on an off-white ground. Editions override most
@@ -70,8 +72,24 @@ def nav(prefix, current, edition_label):
     )
 
 
+def normalize(source):
+    """Reduce either saved shape to a bare artifact body fragment.
+
+    Editions arrive two ways. Some are body fragments starting at <title>, which is
+    what the Artifact tool is given. Others are the whole published document, headed
+    by the artifact host's frame-runtime bootstrap -- that script talks to a parent
+    frame that does not exist on Pages, so it is dropped along with the rest of the
+    host's <head>.
+    """
+    m = BODY_OPEN_RE.search(source)
+    if not m:
+        return source.strip()
+    return BODY_CLOSE_RE.sub("", source[m.end():]).strip()
+
+
 def wrap(fragment, prefix, current, edition_label):
     """Turn an artifact body fragment into a standalone HTML document."""
+    fragment = normalize(fragment)
     title = "FDE Signal Scan"
     m = TITLE_RE.search(fragment)
     if m:
@@ -101,24 +119,33 @@ def wrap(fragment, prefix, current, edition_label):
 
 
 def discover():
-    """Every edition that has an HTML fragment, newest first."""
-    found = []
-    for path in sorted(EDITIONS.glob("*.html")):
+    """Every edition present as HTML, markdown or both, newest first.
+
+    The artifact is rewritten in place each run, so an edition whose HTML was never
+    captured before the next one overwrote it survives only as markdown. Those still
+    belong in the archive.
+    """
+    stems = {}
+    for path in sorted(EDITIONS.glob("*.html")) + sorted(EDITIONS.glob("*.md")):
         m = STEM_RE.match(path.stem)
         if not m:
             print("skip (unrecognised name): %s" % path.name, file=sys.stderr)
             continue
         date, number = m.group(1), int(m.group(2))
-        found.append(
+        entry = stems.setdefault(
+            path.stem,
             {
                 "stem": path.stem,
                 "date": date,
                 "number": number,
                 "label": "Edition %03d - %s" % (number, date),
-                "html": path,
-                "md": path.with_suffix(".md"),
-            }
+                "html": None,
+                "md": None,
+            },
         )
+        entry["html" if path.suffix == ".html" else "md"] = path
+
+    found = list(stems.values())
     found.sort(key=lambda e: (e["number"], e["date"]), reverse=True)
     return found
 
@@ -147,6 +174,7 @@ ARCHIVE_TEMPLATE = """<!doctype html>
   .md{margin-left:auto}
   .md a{color:var(--muted);border-bottom:1px solid var(--line)}
   .md a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .noweb{font-weight:500;color:var(--muted)}
   .empty{color:var(--muted)}
 </style>
 </head>
@@ -177,33 +205,41 @@ def build():
 
     rows = []
     for edition in editions:
-        fragment = edition["html"].read_text(encoding="utf-8")
-        page = wrap(fragment, "../", "edition", edition["label"])
-        (OUT / "editions" / (edition["stem"] + ".html")).write_text(page, encoding="utf-8")
+        if edition["html"]:
+            page = wrap(
+                edition["html"].read_text(encoding="utf-8"), "../", "edition", edition["label"]
+            )
+            (OUT / "editions" / (edition["stem"] + ".html")).write_text(page, encoding="utf-8")
+            name_cell = '<a href="editions/%s.html">Edition %03d</a>' % (
+                edition["stem"],
+                edition["number"],
+            )
+        else:
+            print("note: %s is markdown only" % edition["stem"], file=sys.stderr)
+            name_cell = '<span class="noweb">Edition %03d</span>' % edition["number"]
 
         md_cell = "&mdash;"
-        if edition["md"].exists():
+        if edition["md"]:
             shutil.copyfile(edition["md"], OUT / "editions" / (edition["stem"] + ".md"))
             md_cell = '<a href="editions/%s.md">markdown</a>' % edition["stem"]
         else:
             print("warning: no markdown for %s" % edition["stem"], file=sys.stderr)
 
         rows.append(
-            '<li><span class="date">%s</span>'
-            '<a href="editions/%s.html">Edition %03d</a>'
-            '<span class="md">%s</span></li>'
-            % (edition["date"], edition["stem"], edition["number"], md_cell)
+            '<li><span class="date">%s</span>%s<span class="md">%s</span></li>'
+            % (edition["date"], name_cell, md_cell)
         )
 
     if not rows:
         rows.append('<li class="empty">No editions published yet.</li>')
 
-    # index.html is the newest edition, so the bare Pages URL is always current.
-    if editions:
-        newest = editions[0]
-        fragment = newest["html"].read_text(encoding="utf-8")
+    # index.html is the newest edition that has a page, so the bare Pages URL is
+    # always the current scan.
+    latest = next((e for e in editions if e["html"]), None)
+    if latest:
         (OUT / "index.html").write_text(
-            wrap(fragment, "", "latest", newest["label"]), encoding="utf-8"
+            wrap(latest["html"].read_text(encoding="utf-8"), "", "latest", latest["label"]),
+            encoding="utf-8",
         )
     else:
         (OUT / "index.html").write_text(

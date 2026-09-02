@@ -1,0 +1,630 @@
+<!doctype html><html><head><!-- frame-runtime --><script>window.__FRAME_PREAMBLE={"v":1,"capabilities":{"artifact":"artifact.EF7sW8YL.js","assets":"assets.8Gk803W0.js","comments":"comments.vw5vQdGA.js","db":"db.h-3sndFg.js","downloads":"downloads.C3GSvEDP.js","embed":"embed.CxGAyc-v.js","mcp":"mcp.Bvma3qD7.js","network":"network.B5UA9Su4.js","notifications":"notifications.ssU4jy7G.js","permissions":"permissions.BNySkLV5.js","room":"room.VSdFwTE9.js","sample":"sample.BW2Uysoh.js","self":"artifact.EF7sW8YL.js","user":"user.BpKav-Rf.js"},"transforms":"_transforms.DSB5x63f.js","comments":"_comments.C6E0cR5g.js","translate":"_translate.5HCW4BJh.js"}</script><script>(function(){"use strict";var te=["light","dark","system"],re=/^[A-Za-z0-9_-]{1,64}$/,$=/^[a-zA-Z_:][a-zA-Z0-9_:.-]{0,127}$/,ne=new Set(["class","hidden","value","checked","style","title","alt","placeholder","lang","dir","role","tabindex","disabled","readonly","contenteditable","open","colspan","rowspan"]);function oe(e){const t=e.toLowerCase();return t.startsWith("data-")||t.startsWith("aria-")||ne.has(t)}var Be="http://www.w3.org/1999/xhtml",se="http://www.w3.org/2000/svg",ae=new Set(["script","style","iframe","noscript","noframes","noembed","xmp","plaintext","template","title","textarea","object","embed"]),ie=new Set(["script","style"]);function ce(e){const t=e.localName.toLowerCase();return e.namespaceURI==="http://www.w3.org/1999/xhtml"?!ae.has(t):e.namespaceURI===se?!ie.has(t):!1}function M(e,t){return e===t||(e===160||e===32)&&(t===160||t===32)}function le(e,t){const r=e.length,n=t.length;let s=0;for(;s<r&&s<n&&M(e.charCodeAt(s),t.charCodeAt(s));)s++;let o=0;for(;o<r-s&&o<n-s&&M(e.charCodeAt(r-1-o),t.charCodeAt(n-1-o));)o++;return{p:s,s:o}}function ue(e,t){const r=e.firstChild;if(e.childNodes.length!==1||r===null||r.nodeType!==Node.TEXT_NODE){e.textContent=t;return}const n=r.data,s=n.length,o=t.length,{p:i,s:c}=le(n,t);i===s&&c===0&&s===o||r.replaceData(i,s-i-c,t.slice(i,o-c));const h=r.data,p=e.ownerDocument.getSelection?.()??null,w=p!==null&&p.rangeCount>0&&(p.anchorNode===r||p.focusNode===r)?{anchor:p.anchorNode,anchorOffset:p.anchorOffset,focus:p.focusNode,focusOffset:p.focusOffset}:null;let m=-1,g=-1;for(let f=0;f<h.length&&f<t.length;f++){const v=h.charCodeAt(f),b=t.charCodeAt(f);v!==b&&M(v,b)&&(m<0&&(m=f),g=f)}const a=m>=0;if(a&&r.replaceData(m,g-m+1,t.slice(m,g+1)),a&&w!==null&&w.anchor!==null&&w.focus!==null)try{p.setBaseAndExtent(w.anchor,w.anchorOffset,w.focus,w.focusOffset)}catch{}}var fe=new Set(["html","head","body","frameset"]);function de(e){return e.namespaceURI==="http://www.w3.org/1999/xhtml"&&fe.has(e.localName)}function pe(e){if(e===null||typeof e!="object")return!1;const t=e;if(typeof t.target!="string"||!re.test(t.target)||t.text!==void 0&&typeof t.text!="string")return!1;if(t.attrsSet!==void 0){if(t.attrsSet===null||typeof t.attrsSet!="object")return!1;for(const[r,n]of Object.entries(t.attrsSet))if(!$.test(r)||typeof n!="string")return!1}if(t.attrsRemoved!==void 0){if(!Array.isArray(t.attrsRemoved))return!1;for(const r of t.attrsRemoved)if(typeof r!="string"||!$.test(r))return!1}return!0}function me(e,t){if(e===null||typeof e!="object")return!1;const{seq:r,elements:n}=e;if(typeof r!="number"||!Number.isSafeInteger(r)||!Array.isArray(n)||n.length===0||n.length>64)return!1;for(let s=0;s<n.length;s++)if(!t(n[s]))return!1;return!0}function he(e){return e===null||typeof e!="object"?!1:me(e.__frame_patch,pe)}function _e(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_init;return t!==null&&typeof t=="object"}function ve(e){return e!==null&&typeof e=="object"&&e.__frame_size_poke===!0}function ye(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_theme;if(t===null||typeof t!="object")return!1;const r=t.theme;return typeof r=="string"&&te.includes(r)}var A=/^[\w.-]+\.js$/;function we(e,t,r){return r?"inert":typeof t=="string"&&A.test(t)?e?[t]:"inert":e?"inert":"framed"}function ge(){return{post(e,t){parent.postMessage(e,t)},on(e){const t=r=>{r.source===parent&&e(r.data,r.origin,r.isTrusted)};return addEventListener("message",t),()=>removeEventListener("message",t)}}}function be(){return{post:()=>{},on:()=>()=>{}}}var j="__frame_scroll",Ee=150,Ae=310,Se=160,Te=3e4;function ke(){let e=0,t=!1,r=!1,n=!1,s=0,o=null;const i=l=>{try{sessionStorage.setItem(j,JSON.stringify({y:l}))}catch{}},c=()=>{if(clearTimeout(e),o===null)return;const l=o;o=null,i(l)},h=()=>{if(t){t=!1;return}r=!0,o=scrollY,clearTimeout(e),e=setTimeout(c,Ee)};try{addEventListener("scroll",h,{passive:!0}),addEventListener("pagehide",c)}catch{}const p=()=>{let l;try{l=sessionStorage.getItem(j)}catch{return null}if(l===null)return null;let _;try{_=JSON.parse(l)}catch{_=null}const d=_?.y;if(!(typeof d=="number"&&Number.isFinite(d)&&d>=0)){try{sessionStorage.removeItem(j)}catch{}return null}return d};let w=!1;const m=l=>{try{const _=scrollY;scrollTo({top:l,left:0,behavior:"instant"}),s=l,n=!0,clearTimeout(e),o=null,i(l);const d=scrollY;d!==_&&(t=!0),d!==l&&!w&&(w=!0,addEventListener("load",()=>{try{if(scrollY===d){const T=p();m(T!==null?T:s)}}catch{}},{once:!0}))}catch{}},g=()=>{try{return!!location.hash}catch{return!0}};let a=!1;const f=()=>{try{if(a||innerWidth>Ae||innerHeight>Se)return;a=!0;const l=Date.now(),_=()=>{try{removeEventListener("resize",_)}catch{}if(Date.now()-l>Te||r||g())return;const d=p();m(d!==null?d:s)};addEventListener("resize",_)}catch{}};let v=!1,b=!1;return{restore(){if(v||(v=!0,g()))return;const l=p();l!==null&&(m(l),f())},promoted(){if(b||(b=!0,g()))return;const l=p();l!==null?(m(l),f()):n&&m(s)}}}function Re(e,t,r,n){let s=null;try{s=window.trustedTypes?.createPolicy("frame-runtime",{createScriptURL:h=>h})??null}catch{}const o=window.Worker,i=o?.prototype,c=Object.freeze({Worker:o,workerOn:i?.addEventListener,workerPost:i?.postMessage,workerTerminate:i?.terminate,fetch:window.fetch.bind(window),preventDefault:Event.prototype.preventDefault,policy:s,origins:t});r(e).then(h=>h?.bootTopLevel?h.bootTopLevel(c,n):n.settle()).catch(()=>n.settle())}var De="modulepreload",Ie=function(e){return"/"+e},Ue={},Le=function(t,r,n){let s=Promise.resolve();function o(i){const c=new Event("vite:preloadError",{cancelable:!0});if(c.payload=i,window.dispatchEvent(c),!c.defaultPrevented)throw i}return s.then(i=>{for(const c of i||[])c.status==="rejected"&&o(c.reason);return t().catch(o)})},Oe=window===top,q=Object.getOwnPropertyDescriptor(window,"claude"),k=we(Oe,window.__FRAME_PREAMBLE?.topLevel,q?.writable===!1),N=typeof k=="object"&&k[0],y=N?be():ge();(function(){const e=Object.defineProperty,t=globalThis,r=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let n=0;for(let s=0;s<r.length;s++){const o=r[s];try{e(t,o,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[o]}catch{}try{e(t,o,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[o]=="function"&&n++}if(n&&k==="framed")try{y.post({__frame_rtc_lockdown_failed:n},"*")}catch{}})();var Pe=1e4,Y=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function X(e){for(const t of Y)if(t.endsWith(":*"))try{const r=new URL(e);if(`${r.protocol}//${r.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}var R=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),B=window.__FRAME_PREAMBLE?.transforms,D=window.__FRAME_PREAMBLE?.comments,I=window.__FRAME_PREAMBLE?.translate;function S(e){return Le(()=>import("/_runtime/"+e),void 0)}function G(e,t){return{contract:e.contract,changes:new Set(e.changes??[]),flags:new Set(e.flags??[]),capabilities:e.capabilities??{},capBudgets:e.capBudgets??{},transforms:new Map,shellOrigin:t,mount:x,hooks:O,pipe:()=>({wrap:(r,n)=>(...s)=>{try{return n(...s)}catch(o){return Promise.reject(o)}}})}}var L=null,E=null;function V(e,t,r){try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var U=!1,O={editBefore:null,edit:null};function Ce(e,t,r=!1){const n=[];let s;if(r)try{O.editBefore?.(e)}catch{}for(const o of e.elements){const i=document.querySelector(`[data-id="${o.target}"]`);if(!i){s=o.target;break}if([...Object.keys(o.attrsSet??{}),...o.attrsRemoved??[]].some(c=>!oe(c))){s=o.target;break}if(o.text!==void 0&&(!ce(i)||de(i))){s=o.target;break}for(const[c,h]of Object.entries(o.attrsSet??{}))if(!J(i,c)){try{i.setAttribute(c,h)}catch{}Z(i,c,h)}for(const c of o.attrsRemoved??[])J(i,c)||(i.removeAttribute(c),Z(i,c,null));typeof o.text=="string"&&ue(i,o.text),n.push(o.target)}if(r)try{O.edit?.(e.seq,n,s)}catch{}if(s!==void 0){y.post({__frame_patch_miss:{seq:e.seq}},t);return}try{document.dispatchEvent(new CustomEvent("claude:edit",{detail:{seq:e.seq,targets:n}}))}catch{}}function Z(e,t,r){if(!(e instanceof HTMLInputElement))return;const n=t.toLowerCase();n==="checked"?e.checked=r!==null:n==="value"&&e.type!=="file"&&(e.value=r??"")}function J(e,t){const r=t.toLowerCase(),n=e;return r==="data-id"||(r==="value"||r==="checked")&&(n.__artifactSecret===!0||/^(password|hidden|file)$/.test(n.type??"")||/(^|\s)(cc-|one-time-code|current-password|new-password)/i.test(`${e.getAttribute("autocomplete")??""} ${n.autocomplete??""}`))}function Q(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,U=!0):U&&(delete t.dataset.theme,t.style.colorScheme="",U=!1)}var P=new Map;function Me(){let e;const t={u:new Promise(r=>{e=r}),r:r=>{t.done=!0,e(r)},done:!1,nulled:!1};return t}function F(){for(const e of P.values())e.done||(e.nulled=!0,e.r(null))}var je=Object.freeze(Object.assign(Object.create(null),{call:Function.prototype.call,apply:Function.prototype.apply,bind:Function.prototype.bind})),x=(e,t)=>{const r=P.get(e);if(!r||r.done){r?.nulled&&E&&y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:e}},E);return}const n=typeof t=="function"?Object.setPrototypeOf(t,je):Object.assign(Object.create(null),t);typeof n.then=="function"&&delete n.then,r.r(Object.freeze(n))};function ee(){const e=q?.value??{};V(window,"claude",e);for(const t of Object.keys(R)){if(e[t]!==void 0){V(e,t,e[t]);continue}P.set(t,Me())}if(e.use===void 0){const t=r=>{if(typeof r!="string"||!Object.hasOwn(R,r))return Promise.resolve(null);const n=P.get(r);return n?n.u:Promise.resolve(e[r]??null)};try{Object.defineProperty(e,"use",{value:t,writable:!0,configurable:!0,enumerable:!1})}catch{}}}if(k==="framed"){const e=B&&A.test(B)?S(B).catch(()=>{}):Promise.resolve(void 0),t=a=>{if(a.type==="auxclick"&&a.button!==1)return;const f=a.target,v=f&&f.closest?f.closest("a[href],area[href]"):null;if(!v)return;const b=v.getAttribute("href");if(!b)return;let l;try{l=new URL(b,document.baseURI)}catch{return}if((l.protocol==="http:"||l.protocol==="https:")&&l.origin!==location.origin){a.preventDefault();const _=(v.getAttribute("target")??"").toLowerCase(),d=a.type==="auxclick"||a.metaKey||a.ctrlKey||a.shiftKey||a.altKey||!["","_self","_top","_parent"].includes(_);y.post({__frame_nav:!0,url:l.href,newTab:d},"*")}};addEventListener("click",t,!0),addEventListener("auxclick",t,!0);const r={},n=a=>{a.isTrusted&&(r.pointer=!0)},s=a=>{a.isTrusted&&(r.click=!0)};addEventListener("pointermove",n,{capture:!0,passive:!0}),addEventListener("click",s,{capture:!0,passive:!0}),e.then(a=>{a?.wireNav&&(a.wireNav(),removeEventListener("click",t,!0),removeEventListener("auxclick",t,!0),removeEventListener("pointermove",n,!0),removeEventListener("click",s,!0),a.wireEngagement?.(r))});let o=null;try{o=ke()}catch{}ee();let i=null,c=null,h=0;const p=y.on((a,f)=>{X(f)&&_e(a)&&(i=a.__frame_init,E=f,p(),clearTimeout(h),c?.())});y.post({__frame_connect:!0},"*");const w=new Promise(a=>{c=a,h=setTimeout(()=>{p(),a()},Pe)}),m=document.readyState==="loading"?new Promise(a=>document.addEventListener("DOMContentLoaded",()=>a(),{once:!0})):Promise.resolve();m.then(()=>{try{o?.restore()}catch{}});const g={cb:null};y.on((a,f)=>{if(X(f)&&ve(a)){try{o?.promoted()}catch{}g.cb?.()}}),w.then(async()=>{if(!i||!E){F();return}Q(i.theme);const a=E;let f=!1,v=!1;y.on((u,z,C)=>{if(z!==a)return;ye(u)&&Q(u.__frame_theme.theme),he(u)&&Ce(u.__frame_patch,a,C);const H=u?.__fc_mode;H&&typeof H=="object"&&!f&&D&&A.test(D)&&(f=!0,S(D).then(K=>K.install?.(a,H.on===!0)).catch(()=>{}));const W=u?.__ft_cmd;W&&typeof W=="object"&&!v&&I&&A.test(I)&&(v=!0,S(I).then(K=>K.install?.(a,W)).catch(()=>{}))});const b=Object.keys(i.capabilities??{}).filter(u=>Object.hasOwn(R,u)).map(u=>[u,R[u]]).filter(u=>typeof u[1]=="string"&&A.test(u[1])),l=await Promise.allSettled(b.map(([,u])=>S(u))),_=await e,d=E;if(_?.buildBoot||y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),_?.buildBoot)try{L=_.buildBoot(i,_.TRANSFORMS??{},{shellOrigin:d,mount:x,hooks:O},u=>y.post({__frame_cap_telemetry:u},d))}catch{y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),L=G(i,d)}else L=G(i,d);const T=u=>y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:u}},d),Ne=L;l.forEach((u,z)=>{const C=b[z][0];if(u.status!=="fulfilled"){T(C);return}try{u.value?.install?.(Ne)}catch{T(C)}}),F(),await m,y.post({__frame_ready:!0},E),e.then(u=>u?.installSizeReporter?.(d,g))})}else N&&(ee(),Re(N,Y,S,{settle:F,mount:x}))})();</script><!-- /frame-runtime --><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>FDE Signal Scan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+  :root{
+    --paper:#F5F7F6; --card:#FFFFFF; --ink:#15191B; --muted:#5C6B67;
+    --line:#DDE3E0; --line-soft:#E9EEEC; --hover:#EDF3F1;
+    --accent:#0F7B62; --accent-soft:#E4F1ED;
+    --critical:#A32A22; --critical-soft:#F8E7E5;
+    --warn:#8A5A00; --warn-soft:#FBF0DC;
+    --info:#2C5C93; --info-soft:#E6EEF7;
+    --rail:#C9D4D0; --shadow:0 1px 2px rgba(21,25,27,.05), 0 8px 24px rgba(21,25,27,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#101413; --card:#171C1B; --ink:#E8EDEB; --muted:#93A29E;
+      --line:#252D2B; --line-soft:#1E2523; --hover:#1E2523;
+      --accent:#3FBF9E; --accent-soft:#12312A;
+      --critical:#E98B80; --critical-soft:#3A1E1B;
+      --warn:#D9A441; --warn-soft:#332612;
+      --info:#8DB4E0; --info-soft:#17273A;
+      --rail:#2E3937; --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#101413; --card:#171C1B; --ink:#E8EDEB; --muted:#93A29E;
+    --line:#252D2B; --line-soft:#1E2523; --hover:#1E2523;
+    --accent:#3FBF9E; --accent-soft:#12312A;
+    --critical:#E98B80; --critical-soft:#3A1E1B;
+    --warn:#D9A441; --warn-soft:#332612;
+    --info:#8DB4E0; --info-soft:#17273A;
+    --rail:#2E3937; --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:15px; line-height:1.55; margin:0; -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+
+  /* ============ STICKY CONTROL BAR ============ */
+  .bar{position:sticky; top:0; z-index:40; background:var(--paper); border-bottom:1px solid var(--line);
+       box-shadow:0 1px 0 rgba(0,0,0,.02)}
+  .bar-in{max-width:1560px; margin:0 auto; padding:12px 22px 11px}
+  .row1{display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:10px}
+  .brand{display:flex; align-items:baseline; gap:9px; flex:none}
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);align-self:center}
+  .brand h1{font-family:Archivo,sans-serif; font-weight:700; font-size:19px; letter-spacing:-.02em; margin:0}
+  .brand .ed{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted); letter-spacing:.06em}
+
+  .search{position:relative; flex:1 1 260px; max-width:420px}
+  .search input{
+    width:100%; padding:8px 32px 8px 32px; font-family:inherit; font-size:14px;
+    background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:7px;
+  }
+  .search input::placeholder{color:var(--muted)}
+  .search .mag{position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:13px; pointer-events:none}
+  .search .clr{position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:0; color:var(--muted);
+               cursor:pointer; font-size:16px; line-height:1; padding:4px 6px; border-radius:4px}
+  .search .clr:hover{background:var(--hover); color:var(--ink)}
+
+  .tools{display:flex; align-items:center; gap:8px; margin-left:auto; flex:none}
+  .cnt{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap}
+  .cnt b{color:var(--ink)}
+  select.sort{
+    font-family:"IBM Plex Mono",monospace; font-size:11.5px; padding:6px 8px; border-radius:6px;
+    background:var(--card); color:var(--ink); border:1px solid var(--line); cursor:pointer;
+  }
+
+  .chips{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+  .chips + .chips{margin-top:7px}
+  .glabel{font-family:"IBM Plex Mono",monospace; font-size:9.5px; font-weight:600; letter-spacing:.13em;
+          text-transform:uppercase; color:var(--muted); margin-right:3px; flex:none; width:52px}
+  button.f{
+    font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:500; letter-spacing:.03em;
+    padding:4px 10px; border-radius:20px; cursor:pointer; white-space:nowrap;
+    background:var(--card); color:var(--muted); border:1px solid var(--line); transition:none;
+  }
+  button.f:hover{background:var(--hover); color:var(--ink)}
+  button.f[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+  button.f .n{opacity:.55; margin-left:5px; font-variant-numeric:tabular-nums}
+  button.f.sev-crit[aria-pressed="true"]{background:var(--critical); border-color:var(--critical); color:#fff}
+  button.f.sev-warn[aria-pressed="true"]{background:var(--warn); border-color:var(--warn); color:#fff}
+  button.f.sev-ship[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff}
+  :root[data-theme="dark"] button.f.sev-crit[aria-pressed="true"],
+  :root[data-theme="dark"] button.f.sev-warn[aria-pressed="true"],
+  :root[data-theme="dark"] button.f.sev-ship[aria-pressed="true"]{color:#101413}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) button.f.sev-crit[aria-pressed="true"],
+    :root:not([data-theme="light"]) button.f.sev-warn[aria-pressed="true"],
+    :root:not([data-theme="light"]) button.f.sev-ship[aria-pressed="true"]{color:#101413}
+  }
+  button.reset{margin-left:4px; border-style:dashed}
+
+  /* ============ DEADLINE STRIP ============ */
+  main{max-width:1560px; margin:0 auto; padding:20px 22px 80px}
+  .dl-head{display:flex; align-items:baseline; gap:12px; margin:0 0 11px}
+  .dl-head h2{font-family:Archivo,sans-serif; font-size:15px; font-weight:700; letter-spacing:-.01em; margin:0}
+  .dl-head span{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted)}
+  .dl-strip{display:flex; gap:9px; overflow-x:auto; padding-bottom:9px; margin-bottom:26px; scrollbar-width:thin}
+  .dl{
+    flex:0 0 232px; background:var(--card); border:1px solid var(--line); border-top:3px solid var(--rail);
+    border-radius:7px; padding:11px 13px;
+  }
+  .dl.past{border-top-color:var(--critical)}
+  .dl.soon{border-top-color:var(--warn)}
+  .dl .d{font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; font-variant-numeric:tabular-nums;
+         display:flex; align-items:baseline; gap:7px; margin-bottom:5px}
+  .dl.past .d{color:var(--critical)}
+  .dl.soon .d{color:var(--warn)}
+  .dl .d em{font-style:normal; font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; opacity:.8}
+  .dl .t{font-size:13px; line-height:1.4; margin-bottom:4px}
+  .dl .v{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted)}
+
+  /* ============ CARD GRID ============ */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(316px,1fr)); gap:12px; align-items:start}
+  .c{
+    background:var(--card); border:1px solid var(--line); border-radius:8px; padding:0;
+    cursor:pointer; text-align:left; font:inherit; color:inherit; overflow:hidden; display:block; width:100%;
+  }
+  .c:hover{border-color:var(--rail); box-shadow:var(--shadow)}
+  .c .top{height:3px; background:var(--rail)}
+  .c[data-sev="crit"] .top{background:var(--critical)}
+  .c[data-sev="warn"] .top{background:var(--warn)}
+  .c[data-sev="ship"] .top{background:var(--accent)}
+  .c[data-sev="info"] .top{background:var(--info)}
+  .c .pad{padding:12px 14px 14px}
+  .meta{display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap}
+  .meta .vd{font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:600; letter-spacing:.07em;
+            text-transform:uppercase; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:60%}
+  .meta .dt{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--muted);
+            font-variant-numeric:tabular-nums; margin-left:auto; flex:none}
+  .c h3{font-family:Archivo,sans-serif; font-weight:600; font-size:15.5px; line-height:1.3;
+        letter-spacing:-.008em; margin:0 0 9px; text-wrap:balance}
+  .tags{display:flex; flex-wrap:wrap; gap:4px; margin-bottom:9px}
+  .tag{font-family:"IBM Plex Mono",monospace; font-size:9px; font-weight:600; letter-spacing:.09em;
+       text-transform:uppercase; padding:2px 6px; border-radius:3px; background:var(--line-soft); color:var(--muted)}
+  .tag.crit{background:var(--critical-soft); color:var(--critical)}
+  .tag.warn{background:var(--warn-soft); color:var(--warn)}
+  .tag.ship{background:var(--accent-soft); color:var(--accent)}
+  .tag.info{background:var(--info-soft); color:var(--info)}
+  .whyline{
+    background:var(--accent-soft); border-radius:5px; padding:8px 10px; font-size:12.5px; line-height:1.45;
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .whyline b{font-family:"IBM Plex Mono",monospace; font-size:9px; font-weight:600; letter-spacing:.1em;
+             text-transform:uppercase; color:var(--accent); display:block; margin-bottom:3px}
+
+  .empty{grid-column:1/-1; text-align:center; padding:70px 20px; color:var(--muted)}
+  .empty p{font-size:16px; margin:0 0 6px; color:var(--ink)}
+
+  /* ============ DETAIL DRAWER ============ */
+  .scrim{position:fixed; inset:0; background:rgba(10,14,13,.45); z-index:60; opacity:0; pointer-events:none}
+  .scrim.on{opacity:1; pointer-events:auto}
+  .drw{
+    position:fixed; top:0; right:0; bottom:0; width:min(560px,100%); background:var(--card); z-index:61;
+    border-left:1px solid var(--line); transform:translateX(100%); overflow-y:auto; box-shadow:var(--shadow);
+  }
+  .drw.on{transform:translateX(0)}
+  @media (prefers-reduced-motion:no-preference){
+    .drw{transition:transform .22s cubic-bezier(.32,.72,0,1)}
+    .scrim{transition:opacity .22s ease}
+  }
+  .drw-in{padding:22px 26px 60px}
+  .drw .x{position:sticky; top:0; float:right; margin:-6px -8px 0 0; background:var(--card); border:1px solid var(--line);
+          border-radius:6px; width:30px; height:30px; cursor:pointer; color:var(--muted); font-size:17px; line-height:1}
+  .drw .x:hover{background:var(--hover); color:var(--ink)}
+  .drw h2{font-family:Archivo,sans-serif; font-weight:700; font-size:23px; line-height:1.2; letter-spacing:-.018em;
+          margin:12px 0 12px; text-wrap:balance}
+  .drw .dmeta{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:4px}
+  .drw .dbody{font-size:15px; line-height:1.62; margin:0 0 16px}
+  .drw .dwhy{background:var(--accent-soft); border-left:3px solid var(--accent); border-radius:0 7px 7px 0;
+             padding:14px 16px; font-size:14.5px; line-height:1.6; margin-bottom:16px}
+  .drw .dwhy b{font-family:"IBM Plex Mono",monospace; font-size:10px; font-weight:600; letter-spacing:.11em;
+               text-transform:uppercase; color:var(--accent); display:block; margin-bottom:6px}
+  .drw .dsrc{border-top:1px solid var(--line); padding-top:13px}
+  .drw .dsrc .lbl{font-family:"IBM Plex Mono",monospace; font-size:10px; font-weight:600; letter-spacing:.11em;
+                  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:7px}
+  .drw .dsrc a{display:block; font-family:"IBM Plex Mono",monospace; font-size:12px; margin-bottom:6px; word-break:break-all}
+  .drw .caveat{font-size:13px; color:var(--muted); font-style:italic; margin:0 0 16px}
+
+  /* ============ FOOTER ============ */
+  footer{border-top:1px solid var(--line); margin-top:40px; padding-top:22px}
+  .fgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:26px}
+  footer h4{font-family:Archivo,sans-serif; font-size:14px; margin:0 0 9px}
+  footer p, footer li{font-size:13px; color:var(--muted); line-height:1.55}
+  footer p{margin:0 0 9px} footer ul{margin:0; padding-left:17px} footer li{margin-bottom:6px}
+  .srcpills{display:flex; flex-wrap:wrap; gap:5px; margin-top:4px}
+  .sp{font-family:"IBM Plex Mono",monospace; font-size:10px; padding:2.5px 7px; border-radius:4px;
+      border:1px solid var(--line); color:var(--muted)}
+  .sp.live{border-color:color-mix(in srgb,var(--accent) 40%,transparent); color:var(--accent)}
+  .sp.quiet{opacity:.65}
+  .sp.blocked{border-color:color-mix(in srgb,var(--warn) 45%,transparent); color:var(--warn)}
+
+  @media (max-width:720px){
+    .bar-in{padding:10px 14px} main{padding:16px 14px 60px}
+    .glabel{width:auto} .tools{margin-left:0; width:100%}
+    .grid{grid-template-columns:1fr} .drw-in{padding:18px 18px 50px}
+  }
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="row1">
+      <div class="brand">
+        <span class="dot"></span>
+        <h1>FDE Signal Scan</h1>
+        <span class="ed mono" id="edlabel">ed. 001 · 25 Jul – 31 Aug 2026</span>
+      </div>
+      <div class="search">
+        <span class="mag">⌕</span>
+        <input id="q" type="search" placeholder="Search vendor, technology, anything…" autocomplete="off" aria-label="Search items">
+        <button class="clr" id="clr" aria-label="Clear search" hidden>×</button>
+      </div>
+      <div class="tools">
+        <span class="cnt" id="count"></span>
+        <select class="sort" id="sort" aria-label="Sort order">
+          <option value="date">Newest first</option>
+          <option value="dateAsc">Oldest first</option>
+          <option value="sev">Most urgent first</option>
+          <option value="vendor">By vendor</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="chips" id="fCat"><span class="glabel">Area</span></div>
+    <div class="chips" id="fType"><span class="glabel">Type</span></div>
+    <div class="chips" id="fTime"><span class="glabel">When</span>
+      <button class="f" data-t="0" aria-pressed="true">All dates</button>
+      <button class="f" data-t="7" aria-pressed="false">Last 7 days</button>
+      <button class="f" data-t="14" aria-pressed="false">Last 14 days</button>
+      <button class="f" data-t="30" aria-pressed="false">Last 30 days</button>
+      <button class="f reset" id="reset">Reset all</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="dl-head">
+    <h2>Act on this</h2>
+    <span>dated deadlines · scroll sideways</span>
+  </div>
+  <div class="dl-strip" id="dls"></div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <div class="fgrid">
+      <div>
+        <h4>How to read this</h4>
+        <ul>
+          <li><b>Primary sources only</b> where possible. Where only secondary reporting existed, the item says so.</li>
+          <li><b>Shipped is separated from announced.</b> This distinction is the biggest source of confident-sounding errors in AI news.</li>
+          <li><b>Vendor claims are reproduced, not endorsed.</b> Conflicts of interest are named inline.</li>
+          <li><b>Unconfirmed is written as unconfirmed.</b> Absence of a finding is not evidence of absence.</li>
+          <li><b>Item count is not market signal.</b> Deepgram dominates Voice partly because it publishes a granular dated changelog and its competitors do not.</li>
+          <li><b>Fetched pages are data, never instructions.</b> Deepgram, ElevenLabs and modelcontextprotocol.io docs prepend directive text addressed to AI readers. Benign, first-party, ignored.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Source health</h4>
+        <p>A source going silently stale is the main way a digest like this fails without anyone noticing. This is here so silence is visible.</p>
+        <div class="srcpills">
+          <span class="sp live">Cognigy docs · 2026.18 confirmed current</span><span class="sp live">Deepgram</span><span class="sp live">NVD / CVE</span>
+          <span class="sp live">MCP roadmap + blog</span><span class="sp live">PyPI release history</span><span class="sp live">Cartesia docs</span>
+          <span class="sp live">AssemblyAI</span><span class="sp live">Genesys</span><span class="sp live">CXone release notes</span>
+          <span class="sp live">Zendesk</span><span class="sp live">LangSmith</span><span class="sp live">Braintrust</span>
+          <span class="sp live">Langfuse</span><span class="sp live">Arize Phoenix</span><span class="sp live">A2A protocol blog · back after 2 quiet editions</span>
+          <span class="sp live">Google Gemini API changelog</span><span class="sp live">OpenAI platform + pricing</span>
+          <span class="sp live">Anthropic news</span><span class="sp live">DeepSeek changelog</span><span class="sp live">NVIDIA newsroom</span>
+          <span class="sp live">HN Algolia · productive this edition</span><span class="sp live">GitHub repo pages (direct)</span>
+          <span class="sp live">Product Hunt</span>
+          <span class="sp quiet">ElevenLabs · since 24 Aug</span><span class="sp quiet">Azure Speech · since Jul</span>
+          <span class="sp quiet">Speechmatics · since 20 Aug</span><span class="sp quiet">MCP spec changelog</span>
+          <span class="sp quiet">LangGraph · since 11 Aug</span><span class="sp quiet">OpenAI Agents SDK · since 19 Aug, 2 editions quiet</span>
+          <span class="sp quiet">LlamaIndex · since 19 Aug</span><span class="sp quiet">OTel GenAI semconv stub · redirect to GH repo next run</span>
+          <span class="sp quiet">Verint</span><span class="sp quiet">Five9</span><span class="sp quiet">Talkdesk</span>
+          <span class="sp quiet">Amazon Connect</span><span class="sp quiet">Anthropic eng blog</span>
+          <span class="sp blocked">GitHub API + Atom · 403</span><span class="sp blocked">Reddit · 403</span>
+          <span class="sp blocked">PlayHT · no changelog</span><span class="sp blocked">arXiv API (direct) · routed via WebSearch</span>
+          <span class="sp blocked">Hugging Face trending · not swept</span>
+        </div>
+      </div>
+      <div>
+        <h4>Scope</h4>
+        <p>Seven areas: agent protocols, voice and speech models, Cognigy and the CCaaS field, frameworks and eval, frontier and open-weight models plus AI hardware, plus two discovery lanes for things that are new rather than merely updated: emerging tools and new techniques.</p>
+        <p>General AI news and incremental benchmark papers are out of scope unless they change one of those seven. Frontier model launches and AI hardware shifts are in scope under Models &amp; hardware.</p>
+        <p>The page is rewritten in place each scan, so the link stays the same. Full editions are archived as markdown in the project and synced to the local folder.</p>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drw" id="drw" role="dialog" aria-modal="true" aria-labelledby="dtitle" tabindex="-1">
+  <div class="drw-in" id="drwin"></div>
+</aside>
+
+<script>
+const EDITION = {n:"003", from:"2026-08-18", to:"2026-09-01"};
+
+const CATS = [
+  ["protocol","Protocols"], ["voice","Voice & speech"], ["ccaas","Cognigy & CCaaS"],
+  ["frame","Frameworks & eval"], ["models","Models & hardware"], ["emerging","Emerging tools"], ["technique","New techniques"]
+];
+const TYPES = [
+  ["deadline","Deadline","warn"], ["breaking","Breaking","crit"], ["security","Security","crit"],
+  ["launch","New launch","ship"], ["shipped","Shipped","ship"], ["competitive","Competitive","info"],
+  ["research","Research","info"], ["correction","Correction","info"]
+];
+
+const DEADLINES = [
+  {d:"2026-09-02", t:"Default speech model migrates to Universal-3.5 Pro. Re-baseline or pin.", v:"AssemblyAI"},
+  {d:"2026-09-02", t:"CXone 26.3 window opens. Cognigy AI Agents appear in the Observability Dashboard.", v:"NiCE"},
+  {d:"2026-09-12", t:"Flux TTS free period ends. Pricing page states 12 Sep; edition 001 recorded 13 Sep.", v:"Deepgram"},
+  {d:"2026-10-20", t:"Sonic-2, Sonic-turbo and sonic-3-2025-10-27 sunset.", v:"Cartesia"},
+  {d:"2026-11-05", t:"CXone 26.3 release window closes.", v:"NiCE"},
+  {d:"2026-11-16", t:"Langfuse Cloud v3 support ends. API v1 to v2 breaks custom dashboards.", v:"Langfuse"},
+  {d:"2026-11-21", t:"GPT-5.6 Sol promotional ~20% API price cut is scheduled to end. Budget for reversion to $5/$30 per MTok.", v:"OpenAI"},
+  {d:"2026-12-10", t:"Legacy and Essential AI agents removed. Zendesk states they will no longer function.", v:"Zendesk"},
+  {d:"2027-01-31", t:"LangSmith v1 API endpoints sunset.", v:"LangChain"},
+  {d:"2027-02-26", t:"whisper-1 and the whole gpt-4o-transcribe family shut down.", v:"OpenAI"},
+  {d:"2027-04-01", t:"Blind Mode Node, deprecated LLM node parameters and Azure gpt-5-nano/gpt-5-mini removed. Month only, no day published.", v:"Cognigy"},
+  {d:"2027-07-28", t:"MCP Dynamic Client Registration, Roots, Sampling and Logging leave the 12-month deprecation window.", v:"MCP"}
+];
+
+const ITEMS = [
+/* ---------- PROTOCOLS ---------- */
+{cat:"protocol", sev:"info", types:["correction","competitive","research"], vendor:"Google / AAIF", date:"2026-08-27",
+ title:"A2A ends its quiet period, joins the Agentic AI Foundation as a Growth Stage project",
+ body:`Google's Agent2Agent (A2A) protocol moved from standalone Linux Foundation hosting to formal governance under the Agentic AI Foundation (AAIF), the same foundation that has hosted MCP since December 2025. The A2A project blog states it has "officially been accepted as a Growth Stage project at the Agentic AI Foundation," describing A2A as the horizontal protocol for peer-to-peer agent collaboration, complementary to MCP's vertical agent-to-tool integration layer. No new A2A spec version shipped alongside the move; it is still v1.0.1 from May 2026.`,
+ why:`Both prior editions of this scan recorded "A2A: nothing since May" as a source-health fact, and that line is now stale. It changes nothing technical for a Cognigy build consuming MCP tools today, but putting A2A and MCP under one governance umbrella raises the odds of future cross-protocol alignment, for example on identity and auth, that could eventually touch how Cognigy-side MCP tools interoperate with A2A-speaking agents in a multi-vendor estate. Worth a one-line correction anywhere "A2A has stalled" was said as settled fact.`,
+ caveat:"Governance change only, not a spec release. Announcement dated 17 Aug; formal acceptance post dated 27 Aug.",
+ src:[["A2A blog: A New Chapter for A2A","https://a2a-protocol.org/latest/blog/category/announcements/"],["Axios coverage","https://www.axios.com/2026/08/17/a2a-agentic-ai-foundation-open-ai-standards"]]},
+
+/* ---------- MODELS & HARDWARE (new lane this edition) ---------- */
+{cat:"models", sev:"crit", types:["breaking","launch","shipped"], vendor:"Anthropic", date:"2026-09-01",
+ title:"Fable 5.1 and Mythos 5.1 ship with forced tool-choice now returning an error",
+ body:`Claude Fable 5.1 and Claude Mythos 5.1 (<code>claude-fable-5-1</code>) went GA on the Claude API, Bedrock, Vertex and Azure Foundry. List price is unchanged from Fable 5 at $10/$50 per MTok input/output, but cached-token reads drop from $1 to $0.25 per MTok, a 75 percent cut Anthropic says nets roughly 25 to 45 percent cheaper depending on how agentic the workload is. Context is a flat-priced 1M tokens with no long-context surcharge tier, max output 128K. The breaking change: forced <code>tool_choice</code> of type <code>"any"</code> or <code>"tool"</code> now returns a 400 error, because thinking is always on for these models and a forced tool call would skip it. Anthropic's documented migration path is <code>strict: true</code> tool use or structured outputs, and conversation history must now be treated as append-only, since editing or reordering earlier turns invalidates thinking blocks and raises an error.`,
+ why:`If any Cognigy LLM node or custom intent-extraction flow relies on forced <code>tool_choice</code>, a common pattern for reliably routing to one schema, pointing the connection at <code>claude-fable-5-1</code> starts throwing 400s the moment it is selected: audit this before anyone flips the model dropdown on an existing build. The append-only history requirement is real friction against Cognigy's context and session-memory handling, which sometimes trims or rewrites prior turns; that pattern would silently invalidate thinking blocks or error out mid voice session. Separately, the cache-read price cut is a genuine cost lever for any Cognigy flow that resends large system prompts or tool schemas turn over turn, which is the normal shape of a multi-turn voice agent, so it is worth re-testing cache-hit economics on any high-volume Fable-5.1 or Mythos-5.1 deployment.`,
+ caveat:"none",
+ src:[["Anthropic: Claude Fable and Mythos 5.1","https://www.anthropic.com/claude-fable-and-mythos-5-1"],["What's new in Fable 5.1","https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1"]]},
+
+{cat:"models", sev:"warn", types:["deadline","shipped"], vendor:"OpenAI", date:"2026-08-22",
+ title:"GPT-5.6 Sol gets a temporary API price cut that reverts in November",
+ body:`OpenAI cut GPT-5.6 Sol API and credit pricing from $5/$30 to $4/$20 per MTok input/output, roughly 20 percent off input and 33 percent off output, for three months, with the promotional window running at least through 21 November 2026. OpenAI's own framing was "dropping API and credit pricing of GPT-5.6 Sol by over 20 percent for the next 3 months." The discount applies to API usage and ChatGPT Work and Codex credit pools; it does not touch Pro, Plus or Business subscription pricing.`,
+ why:`A time-boxed discount dressed as a permanent win is exactly the trap to catch before it lands in a client cost model: if a Cognigy customer's budget gets built against this rate, it steps back up around late November unless OpenAI extends it. Flag this explicitly in any cost projection built this quarter, and check whether the discount applies automatically to the connection type in use, since Cognigy's OpenAI connection config does not distinguish promotional pricing windows from standard ones.`,
+ caveat:"Reported via a third-party pricing tracker quoting OpenAI's own post. Verify the current rate directly against OpenAI's pricing page before quoting a customer, since the discount is temporary and could change without a dedicated announcement.",
+ src:[["OpenAI GPT-5.6 Sol price cut coverage","https://www.explainx.ai/blog/openai-gpt-5-6-sol-api-price-cut-20-percent-august-2026"]]},
+
+{cat:"models", sev:"info", types:["shipped","competitive","research"], vendor:"DeepSeek", date:"2026-08-21",
+ title:"An experimental multimodal model claims near-parity with Opus 4.8 on some benchmarks",
+ body:`DeepSeek's own changelog announced <code>deepseek-v4-flash-vision-exp</code> as available on its API platform, describing it as approaching Opus 4.8 on multimodal tasks while holding text-only parity with V4-Flash. DeepSeek's self-reported numbers are mixed, not a clean win: it leads on Agents' Last Exam (27.3 vs 25.7) and ZeroBench Pass@5 (35.0 vs 34.0), but trails on ApexBench (36.5 vs 39.4), Terminal Bench 2.1 (83.9 vs 85.0) and NL2Repo (57.7 vs 69.7). Images are billed at up to 384 tokens each, at existing V4-Flash text pricing.`,
+ why:`Treat the "near-parity with Opus 4.8" framing skeptically, since the actual benchmark spread is mixed rather than a clean win, and every number here is DeepSeek reporting on its own model against a competitor's. Still, if this pricing holds to V4-Flash's existing low rate card, it is a real signal that low-cost multimodal reasoning is becoming viable for use cases like document or ID capture inside a voice or chat flow, without paying Opus or Sol-tier prices. DeepSeek is not an available Cognigy LLM provider option today, so this is a watch item, not something to propose in a build.`,
+ caveat:"All benchmark numbers are DeepSeek's own reported figures, not independently verified. Clear vendor conflict of interest: DeepSeek benchmarking its own model against a competitor.",
+ src:[["DeepSeek API changelog","https://api-docs.deepseek.com/updates/"]]},
+
+{cat:"models", sev:"ship", types:["shipped","launch","competitive"], vendor:"Alibaba / Qwen", date:"2026-08-26",
+ title:"Qwen3.8-Flash-Next open-weights preview a cheaper Qwen4 architecture at 6B active parameters",
+ body:`Alibaba released open weights for Qwen3.8-Flash-Next: a 125B-parameter backbone plus a 51B n-gram embedding table and a 4B multi-token-prediction module, roughly 180B on disk but only 6B parameters active per token. Native context is 262,144 tokens, extensible to 1,000,000 via YaRN. Alibaba frames it as previewing "an architecture designed for the next generation of models, the Qwen4 series," positioned as competitive with Anthropic's Opus 4.6 and DeepSeek's V4-Flash. Licensing is under <code>qwen-community-1.0</code>, explicitly not Apache-2.0.`,
+ why:`This is directly relevant to Cognigy's <code>openAICompatible</code> provider path for self-hosted vLLM or Hugging Face endpoints: a 6B-active-parameter MoE with a 1M-token ceiling is an attractive low-latency, low-inference-cost option where a customer wants data residency or cost control outside the big-three API vendors. The catch is the non-Apache license, which needs a legal read before proposing it for any commercial engagement, since community licenses can restrict exactly the kind of resale or hosting arrangement an FDE engagement typically needs.`,
+ caveat:"Two outlets describe the parameter breakdown slightly differently (a 125B headline figure vs. the fuller 180B-on-disk/6B-active MoE detail); almost certainly the same release at different levels of technical detail, but the discrepancy itself is unconfirmed.",
+ src:[["MarkTechPost coverage","https://www.marktechpost.com/2026/08/26/alibabas-qwen-team-releases-qwen3-8-flash-next-a-125b-multimodal-moe-with-6b-active-parameters-previewing-the-qwen4-architecture/"]]},
+
+{cat:"models", sev:"info", types:["competitive"], vendor:"NVIDIA", date:"2026-08-26",
+ title:"Record $96.2B quarter, with Vera Rubin now ramping into production at hyperscalers",
+ body:`NVIDIA's Q2 FY2027 results: total revenue $96.2B, up 106 percent year over year and 18 percent quarter over quarter; Data Center revenue $89.0B, up 117 percent year over year. Jensen Huang said the buildout is now driven by "multiple frontier labs scaling in parallel, a thriving open-model ecosystem." NVIDIA states the Vera Rubin platform, announced 16 March 2026 and claiming 10x higher inference throughput per watt and one-tenth the cost per token versus Blackwell, is "ramping into full production with racks running at partners" including major cloud providers. Q3 FY2027 guidance is $108.0B revenue.`,
+ why:`No supply-constraint or inference-pricing detail was disclosed, so this is not an immediate cost signal, but the Vera Rubin ramp is the hardware trend worth watching over the next two to three quarters. If NVIDIA's claimed throughput-per-watt and cost-per-token gains hold even partially, that is the kind of infrastructure shift that eventually shows up as lower per-token API pricing from the model vendors Cognigy connects to, since OpenAI, Anthropic and Google all run substantially on NVIDIA silicon. Nothing actionable today; worth revisiting in Q4 when Vera Rubin capacity actually lands.`,
+ caveat:"none",
+ src:[["NVIDIA Q2 FY2027 results","https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027"]]},
+
+{cat:"models", sev:"warn", types:["correction","competitive"], vendor:"Google / DeepMind", date:"2026-08-23",
+ title:"Gemini 3.5 Pro has now missed three release windows; do not plan a migration around it",
+ body:`As of 23 August, no <code>gemini-3.5-pro</code> entry exists in the Gemini API model list and no pricing has been published. The model has missed three targeted windows: June 2026 at its I/O announcement, mid-July 2026, and early August 2026. The most recent public status came from Google's Gemini API product lead on 21 July, saying the model was "testing with partners" and would "hopefully land soon"; DeepMind's models page still reads "3.5 Pro coming soon." Third-party reporting attributes the delay to a June retraining pass aimed at coding capability that reportedly underdelivered.`,
+ why:`Cognigy added <code>gemini-3.7-flash</code> support in 2026.18, and it is tempting to assume the higher-capability <code>gemini-3.5-pro</code> tier is close behind for anything needing stronger reasoning on the Google side. It is not, and has not been for three straight windows. Treat any customer roadmap or PoC plan that assumes Gemini 3.5 Pro availability "this quarter" as a real risk, and default to <code>gemini-3.7-flash</code> or a non-Google provider for near-term commitments.`,
+ caveat:"No official Google delay announcement exists. The specific cause (a retraining or pre-training restart) is inferred from a single public statement plus third-party reporting, and should be treated as unconfirmed.",
+ src:[["Gemini 3.5 Pro status writeup","https://codersera.com/blog/gemini-3-5-pro-launch-guide-2026/"]]},
+
+/* ---------- FRAMEWORKS & EVAL ---------- */
+{cat:"frame", sev:"info", types:["shipped","correction"], vendor:"CrewAI", date:"2026-08-27",
+ title:"CrewAI enters this scan's tracked baseline at 1.15.18 after going unreported since edition 001",
+ body:`CrewAI has been in this scan's stated scope since edition 001 but was never actually checked or reported. Its current stable release is 1.15.18 (27 August), which stabilizes conversational flows, adds an AMP trace-batch-sharing observability hook, and fixes a Claude Sonnet 4.6 context-window mapping bug. Everything published since then through 1 September is unreleased nightly dev builds, not real releases.`,
+ why:`This closes a real gap in prior editions rather than reporting new news: CrewAI is now a tracked baseline, so the next genuine release shows up as a proper delta instead of silence. The AMP trace-batch-sharing hook is the one to watch, since it is directly relevant to the observability-parity question Odi already tracks across LangSmith, Braintrust and Cognigy: if a client stack pairs Cognigy with a CrewAI orchestration layer, this is where cross-vendor tracing gets wired.`,
+ caveat:"Establishing a baseline, not reporting a new event. Dev builds past 1.15.18 are excluded as not real releases.",
+ src:[["PyPI crewai release history","https://pypi.org/project/crewai/#history"]]},
+
+/* ---------- EMERGING TOOLS (discovery lane, catching up 2 owed editions) ---------- */
+{cat:"emerging", sev:"ship", types:["launch"], vendor:"OneCLI", date:"2026-08-21",
+ title:"A credential-injection gateway lets agents call APIs without ever seeing raw keys",
+ body:`OneCLI (YC S26) is an open-source Rust HTTP gateway that injects AES-256-GCM-encrypted API credentials into agent requests without exposing raw keys to the agent itself, with per-agent scoped permissions and a Next.js admin dashboard. It has 2.4k GitHub stars, 124 forks, is Apache-2.0, and has shipped 37-plus releases. A formal Launch HN post went up 19 August and it placed #7 on Product Hunt on 21 August.`,
+ why:`This is a direct architectural pattern for a problem Odi already deals with in Salesforce and SAP HTTP-tool integrations: instead of storing OAuth secrets inside a Cognigy connection, a gateway like this could sit in front of enterprise HTTP tools and inject credentials per agent, which is a cleaner story for enterprise security reviews on a PoC.`,
+ caveat:"Not a first appearance: GitHub shows 37-plus releases back to at least May 2026 and stars already accrued before this window. The August launch posts are a visibility spike, not the tool's origin, though the traction (2.4k stars, 37 releases) is real rather than vaporware.",
+ src:[["Launch HN thread","https://news.ycombinator.com/item?id=49363710"],["onecli/onecli on GitHub","https://github.com/onecli/onecli"]]},
+
+{cat:"emerging", sev:"info", types:["launch"], vendor:"Grith", date:"2026-08-25",
+ title:"A kernel-level syscall supervisor scores every action an AI coding agent takes",
+ body:`Grith intercepts Linux syscalls, file access, exec and network, at the kernel level and scores each one against 18 filters before allowing execution, returning allow, queue or deny verdicts with a claimed 0.02ms median scoring time. Current release is v0.3.2, MPL-2.0, installable today on Linux x86_64/arm64, with macOS and Windows planned for v2.0.`,
+ why:`Not directly applicable to Cognigy flows, which do not execute arbitrary agent-written code, but it is a concrete, citable example of what "runtime guardrails" mean for coding agents, useful context to have ready when a customer conversation about agent security conflates that problem with the conversational-guardrail problem a Cognigy agent actually has.`,
+ caveat:"Very low HN traction, 4 points, no independent user counts or funding disclosed.",
+ src:[["Grith is live","https://grith.ai/blog/grith-is-live"]]},
+
+{cat:"emerging", sev:"info", types:["launch"], vendor:"AC2 Protocol", date:"2026-08-27",
+ title:"A hardware-signed approval protocol lets agents request human sign-off for sensitive actions",
+ body:`The Agentic Communication and Control Protocol (AC2), backed by Algorand Foundation US, lets an AI agent request user approval for sensitive actions, payments or code signing, via hardware-bound FIDO2/WebAuthn signatures and DIDComm v2.0 messages, keeping private keys on-device. No blockchain or central relay is required despite the crypto-foundation origin. A reference plugin and Android and iOS wallet apps exist today.`,
+ why:`Conceptually relevant to a real design gap in voice and chat agents: how to get cryptographically verifiable human sign-off for a high-stakes action, such as a voice agent authorizing a refund or an account change, rather than a soft confirm-yes-no turn. Worth watching as a possible future standard for human-in-the-loop approval, even though there is no Cognigy integration path today.`,
+ caveat:"Backed by a blockchain foundation, which may color a security-conscious enterprise customer's reaction even though the protocol itself is chain-free. No adoption metrics beyond being live today.",
+ src:[["AC2 Protocol HN thread","https://news.ycombinator.com/item?id=49464979"],["ac2protocol.org","https://www.ac2protocol.org"]]},
+
+{cat:"emerging", sev:"info", types:["launch"], vendor:"ThunderPhone", date:"2026-08-27",
+ title:"A voice-calling stack fuses multiple STT models with direct audio-to-LLM input to fix barge-in",
+ body:`ThunderPhone v2, from a Stanford AI Lab and YC-alumni team, claims "multi-path listening" that fuses multiple transcription models plus direct audio-to-LLM input, with a two-tier fast-plus-reasoning model pair for balancing responsiveness against instruction-following. It claims #1 on Big Bench Audio at 99.4 percent and "thousands of production calls," with pricing from 2 cents a minute. The stack was originally built for car-insurance pre-sales automation.`,
+ why:`Directly comparable to what Odi builds on Cognigy Voice Gateway: the fuse-multiple-STT-models-plus-raw-audio approach is a concrete architecture idea for improving barge-in and interruption handling, a known pain point in Cognigy voice deployments, and worth a benchmark comparison if a client ever asks why not build custom voice infrastructure instead of a Cognigy-plus-vendor stack.`,
+ caveat:"Extremely thin HN traction, 4 points and zero comments, essentially unvalidated by that audience. Benchmark and production-scale claims are self-reported and not independently confirmed.",
+ src:[["Show HN thread","https://news.ycombinator.com/item?id=49466204"],["thunderphone.com","https://thunderphone.com"]]},
+
+{cat:"emerging", sev:"info", types:["launch"], vendor:"OzBrain", date:"2026-08-21",
+ title:"A hosted shared-memory layer lets Claude, ChatGPT and Cursor read and write one knowledge base",
+ body:`OzBrain is a hosted knowledge base that multiple AI tools and team members read and write to as one shared source of truth, positioned against siloed per-platform agent memory. It is a commercial SaaS product with a free tier up to 100 articles and paid tiers up to $99 a month for 5,000 articles, plus an enterprise tier. The Show HN post drew 93 points and 59 comments, real traction for that format.`,
+ why:`Useful competitive reference point for Cognigy's Knowledge AI story: a customer-facing "single knowledge brain across agent tools" pitch is something CX buyers may start asking about, and this is a concrete example to compare against when that question comes up, not something to integrate directly.`,
+ caveat:"Real HN engagement, but the only traction evidence on the product's own site is the founders' own account (503 articles); no independent user counts, testimonials or funding disclosed.",
+ src:[["Show HN thread","https://news.ycombinator.com/item?id=49394827"],["ozbrain.com","https://ozbrain.com"]]},
+
+{cat:"emerging", sev:"info", types:["launch"], vendor:"Mnemosyne", date:"2026-08-23",
+ title:"An MCP-native memory server pairs Markdown vaults with pgvector for agent long-term memory",
+ body:`Mnemosyne is an open-source, MCP-native persistent-memory server pairing human-readable Obsidian Markdown vaults with PostgreSQL and pgvector, or SQLite, for hybrid search, knowledge graphs and temporal memory decay. It ships as <code>mnemosyne-memory</code> on PyPI under the MIT license, with a CLI, Docker Compose setup, and documented integrations for several agent hosts.`,
+ why:`Concretely prototypable: since Cognigy already supports MCP-type tools, this is a candidate for wiring in as a long-term-memory MCP tool on a Cognigy agent, giving cross-session memory beyond what Cognigy's native context or session store offers today. Small and early, but the MCP-native design makes it a low-effort experiment.`,
+ caveat:"Only 9 GitHub stars and 1 HN comment, genuinely early-stage with no evidence of production users, though the code itself is functional with tests, CI and Docker rather than a bare README.",
+ src:[["HN thread","https://news.ycombinator.com/item?id=49410254"],["M4F-S/mnemosyne on GitHub","https://github.com/M4F-S/mnemosyne"]]},
+
+{cat:"emerging", sev:"info", types:["launch"], vendor:"Skills MCP", date:"2026-08-30",
+ title:"A new MCP server aggregates roughly 7,000 agent skills into a searchable, installable catalog",
+ body:`Skills MCP is an MCP server that lets an agent search, recommend and install skills pulled from 11 source repositories, including Anthropic's own, organized into 20 domains with a daily automated catalog refresh. It is MIT-licensed and ships a functional tool set for searching, installing and recommending skills.`,
+ why:`A new entrant to the MCP ecosystem specifically in the skills-registry-and-marketplace niche, which is relevant context for how Cognigy's own Agent Plugins and skills story may need to compete with an open, aggregated marketplace rather than a closed one.`,
+ caveat:"Zero GitHub stars at time of writing, brand new and essentially unvalidated by the community, though the code is functional rather than a stub.",
+ src:[["Show HN thread","https://news.ycombinator.com/item?id=49501178"],["gengirish/skills-mcp on GitHub","https://github.com/gengirish/skills-mcp"]]},
+
+/* ---------- NEW TECHNIQUES (discovery lane, catching up 2 owed editions) ---------- */
+{cat:"technique", sev:"ship", types:["research","shipped"], vendor:"LiveKit", date:"2026-03-19",
+ title:"A CNN classifier scores the first 200ms of speech to tell a real interruption from noise",
+ body:`Closing the open chase from edition 001. LiveKit's adaptive interruption handling runs a small CNN-based audio encoder ahead of full VAD and ASR, classifying the first roughly 200ms of detected speech by onset shape, duration and prosody to decide if it is a genuine interruption or noise and backchannel. LiveKit reports 86 percent precision and 100 percent recall at 500ms overlap, rejecting 51 percent of VAD false positives while firing 64 percent faster than VAD, at 30ms or less inference. It ships by default in LiveKit Agents Python 1.5.0-plus and TypeScript 1.2.0-plus.`,
+ why:`This is the concrete technique to cite the next time a client complains an agent talks over callers or ignores real interruptions on PSTN calls: a purpose-built classifier ahead of endpointing, not a VAD threshold tweak. Worth checking whether Cognigy's Voice Gateway and Deepgram integration path could sit in front of or alongside something like this, since Cognigy does not ship an equivalent barge-in classifier today.`,
+ caveat:"Single-vendor blog post (single-company blog, not peer-reviewed), no independent replication. All numbers are LiveKit-reported on its own test set.",
+ src:[["LiveKit: adaptive interruption handling","https://livekit.com/blog/adaptive-interruption-handling"],["LiveKit docs","https://docs.livekit.io/agents/logic/turns/adaptive-interruption-handling/"]]},
+
+{cat:"technique", sev:"warn", types:["security","research"], vendor:"Trail of Bits", date:"2026-08-26",
+ title:"VM isolation alone is argued insufficient for cyber-capable agents",
+ body:`Trail of Bits argues standard VM and hypervisor isolation is no longer a sufficient sandbox boundary for cyber-capable agents, citing an independently verified vulnerability, CVE-2026-53359, a 16-year-old KVM shadow-paging bug enabling guest-to-host escape on Intel and AMD, plus libslirp networking bugs and multi-CVE exploit chains an agent could autonomously discover and synthesize from public research over long autonomous runs. The post recommends minimal-attack-surface hypervisors, aggressive patch cadence, least-privilege network egress, and bounded agent runtime windows rather than trusting VM isolation alone.`,
+ why:`Direct ammunition for a client architecture review where a customer wants an agent or an agent-driven tool or code-exec step sandboxed "in a VM and that's good enough." The underlying CVE is real and independently verified, so this is citable rather than speculative: VM isolation needs defense in depth, network egress limits, patch SLAs and session time-to-live, not a hard boundary on its own. Relevant to any Cognigy tool node that shells out to code execution or a customer-hosted sandbox.`,
+ caveat:"Single-company blog post from a security vendor, not peer-reviewed. The underlying CVE-2026-53359 is independently confirmed across multiple sources; the specific narrative of an agent autonomously discovering and chaining it over 12 hours is Trail of Bits' own account and not independently reproduced.",
+ src:[["Trail of Bits: VMs won't contain cyber-capable agents","https://blog.trailofbits.com/2026/08/26/vms-wont-contain-cyber-capable-agents/"]]},
+
+{cat:"technique", sev:"info", types:["research"], vendor:"NVIDIA", date:"2026-08-20",
+ title:"Paired on/off trials propose a portable way to measure whether an agent skill actually helps",
+ body:`ACES (Agentic Continuous Evaluation of Skills), an NVIDIA preprint, evaluates enterprise agent skills individually via paired live A/B trials, running the same task with and without a given skill enabled, normalizing results into a "Skill Lift" metric. Tested on 145 real-world skills across 947 paired trials, reporting a mean composite lift of 0.2134 with positive outcomes in 72.8 percent of trials. A reference implementation is open-sourced as NVIDIA SkillEvaluator.`,
+ why:`A concrete, portable methodology for the recurring question of whether a specific Cognigy tool or knowledge source actually helps or is dead weight in the prompt: paired on/off trials per skill are directly reproducible against a Cognigy AI Agent's tool set without needing NVIDIA's own tooling, and give a defensible way to prune tool bloat rather than eyeballing it.`,
+ caveat:"Preprint, not peer-reviewed. Clear conflict of interest: all authors appear to be NVIDIA employees and the reference implementation is NVIDIA's own tool, so treat the specific lift numbers as vendor-favorable self-evaluation, though the paired-trial method itself is reusable independent of NVIDIA's tooling.",
+ src:[["arXiv 2608.20614","https://arxiv.org/abs/2608.20614"]]},
+
+{cat:"technique", sev:"info", types:["research"], vendor:"Laude Institute / MIT", date:"2026-08-25",
+ title:"A microharness architecture explores what a genuinely persistent, always-on agent looks like",
+ body:`Headlong, from the Laude Institute and MIT researchers, describes an architecture for long-running agents that never sleep between turns: an infinite "Thinker" loop backed by a bash-native recursive-LLM implementation that decides each cycle whether to act or respond. Context management uses exponentially decaying-resolution history, recent turns verbatim and older ones progressively summarized, plus an append-only trajectory stored as a DAG of jsonl files supporting fork and merge. The authors state most existing agent benchmarks are self-contained and a poor fit for measuring persistent agency, and their own evaluation is explicitly qualitative.`,
+ why:`Directly relevant to any Cognigy Flow design for a long-running or always-on agent, such as monitoring or multi-day case follow-up: the exponential-decay compaction plus fork-and-merge trajectory log is a concrete pattern to borrow conceptually for state management that survives far beyond a single session's context window, which Cognigy's native context object does not solve on its own. Also a useful pushback point in a vendor conversation: the authors themselves say standard agent benchmarks do not validate persistent-agent claims, worth raising if a vendor pitches an "always-on agent" backed only by single-session benchmark numbers.`,
+ caveat:"Blog post from a research nonprofit, not peer-reviewed. Evaluation is explicitly qualitative and anecdotal by the authors' own admission, not benchmarked.",
+ src:[["Laude Institute: Headlong","https://www.laude.org/updates/headlong-a-microharness-for-persistent-agents"]]},
+
+{cat:"technique", sev:"info", types:["research"], vendor:"Independent", date:"2026-08-27",
+ title:"Lazy tool-schema activation cut one agent's context overhead by 75 to 95 percent",
+ body:`An independent practitioner describes collapsing separate CRUD-style tools into single parameterized tools with an action enum, roughly a 50 percent schema reduction, then keeping only a small baseline tool set fully loaded while listing specialized tools as cheap Markdown stubs that expand to full JSON schemas on demand, with automatic expiry after two idle turns. Across 10,186 real assistant turns, reported turn-zero overhead dropped from 14,500 to 19,900 tokens to roughly 3,600 tokens, a 75 to 82 percent reduction, with only 3.47 percent of turns causing a cache miss from the dynamic activation.`,
+ why:`Cognigy AI Agents accumulate tool definitions in the system prompt the same way any LLM agent does, and every attached tool or knowledge source is dead prompt weight on turns that do not use it. This is a directly applicable pattern for a Cognigy build with many tools, for example an enterprise agent wired to Salesforce, SAP and several MCP servers: consolidate near-duplicate tools into one parameterized tool, and consider whether Cognigy's tool-attachment model could support lazy or conditional tool exposure per intent rather than exposing the full catalog on every turn.`,
+ caveat:"Single individual's blog post, not peer-reviewed, self-reported numbers from one custom agent framework with no independent replication. The underlying mechanism is sound and worth testing directly; treat the specific percentages as one practitioner's result, not a general law.",
+ src:[["How I cut 80 percent context overhead with dynamic tools","https://m-reschreiter.at/en/blog/how-i-cut-80-percent-context-overhead-dynamic-tools"]]},
+
+{cat:"technique", sev:"info", types:["research"], vendor:"Independent", date:"2026-08-23",
+ title:"A four-layer framing separates the model, the harness and the agent for debugging",
+ body:`An independent essay argues "agent" and "model" are routinely conflated in failure discussions, and proposes separating four layers: the model as a pure token function, the inference service that hosts it, the harness, meaning the logic that shapes prompts, parses outputs and calls tools, and the full agent system as all three composed. The core claim is that identical models behave very differently across systems because the harness, not the model, controls what context and tools the model actually sees, so failure diagnosis should start by identifying which layer produced the symptom.`,
+ why:`Gives Odi precise vocabulary for client architecture reviews where a customer blames "the model" for a bad outcome that is actually a Cognigy Flow or prompt-construction problem, or the reverse: swapping the underlying LLM will not fix a badly scoped tool set or a context-assembly bug, and that distinction is worth making explicit before a client burns a cycle re-benchmarking LLM vendors. It is also a mild, useful challenge to "just point it at a better model" as a reflexive fix in Cognigy LLM-node troubleshooting.`,
+ caveat:"Personal blog post, an argument and framing piece rather than an empirical study; useful as vocabulary, not as evidence.",
+ src:[["Your Agent Is Not the Model","https://code.joejag.com/2026/your-agent-is-not-the-model.html"]]}
+];
+
+
+/* ============================ RENDER ============================ */
+const $ = s => document.querySelector(s);
+const NOW = new Date(EDITION.to + "T12:00:00Z");
+const state = {q:"", cats:new Set(), types:new Set(), days:0, sort:"date"};
+
+const SEVRANK = {crit:0, warn:1, ship:2, info:3};
+const fmt = iso => {
+  const [y,m,d] = iso.split("-");
+  return d + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1] + " " + y.slice(2);
+};
+const daysAgo = iso => Math.round((NOW - new Date(iso+"T12:00:00Z")) / 86400000);
+const typeMeta = k => TYPES.find(t => t[0] === k) || [k,k,""];
+const strip = h => h.replace(/<[^>]*>/g," ");
+
+$("#edlabel").textContent = `ed. ${EDITION.n} · ${fmt(EDITION.from)} – ${fmt(EDITION.to)}`;
+
+/* --- deadline strip --- */
+$("#dls").innerHTML = DEADLINES.map(x => {
+  const dd = daysAgo(x.d);
+  const cls = dd > 0 ? "past" : (dd > -30 ? "soon" : "");
+  const note = dd > 0 ? "passed" : (dd > -30 ? `in ${-dd}d` : `in ${Math.round(-dd/30)}mo`);
+  return `<div class="dl ${cls}"><div class="d">${fmt(x.d)} <em>${note}</em></div>
+    <div class="t">${x.t}</div><div class="v">${x.v}</div></div>`;
+}).join("");
+
+/* --- filter chips --- */
+function buildChips(host, list, key){
+  host.insertAdjacentHTML("beforeend", list.map(o => {
+    const [k,label,sev] = o;
+    const n = ITEMS.filter(i => key==="cats" ? i.cat===k : i.types.includes(k)).length;
+    const sc = sev ? ` sev-${sev==="crit"?"crit":sev==="warn"?"warn":"ship"}` : "";
+    return `<button class="f${sc}" data-k="${k}" data-g="${key}" aria-pressed="false">${label}<span class="n">${n}</span></button>`;
+  }).join(""));
+}
+buildChips($("#fCat"), CATS, "cats");
+buildChips($("#fType"), TYPES, "types");
+
+/* --- filtering --- */
+function visible(){
+  let out = ITEMS.filter(i => {
+    if (state.cats.size && !state.cats.has(i.cat)) return false;
+    if (state.types.size && !i.types.some(t => state.types.has(t))) return false;
+    if (state.days && daysAgo(i.date) > state.days) return false;
+    if (state.q){
+      const hay = (i.title+" "+i.vendor+" "+strip(i.body)+" "+strip(i.why)+" "+i.types.join(" ")).toLowerCase();
+      if (!state.q.toLowerCase().split(/\s+/).every(w => hay.includes(w))) return false;
+    }
+    return true;
+  });
+  const s = state.sort;
+  out.sort((a,b) =>
+    s==="date"    ? b.date.localeCompare(a.date) :
+    s==="dateAsc" ? a.date.localeCompare(b.date) :
+    s==="vendor"  ? a.vendor.localeCompare(b.vendor) || b.date.localeCompare(a.date) :
+                    SEVRANK[a.sev]-SEVRANK[b.sev] || b.date.localeCompare(a.date));
+  return out;
+}
+
+function render(){
+  const list = visible();
+  $("#count").innerHTML = `<b>${list.length}</b> of ${ITEMS.length}`;
+  $("#grid").innerHTML = list.length ? list.map((i) => {
+    const idx = ITEMS.indexOf(i);
+    const tags = i.types.slice(0,3).map(t => {
+      const [,label,sev] = typeMeta(t);
+      return `<span class="tag ${sev||""}">${label}</span>`;
+    }).join("");
+    return `<button class="c" data-i="${idx}" data-sev="${i.sev}">
+      <div class="top"></div>
+      <div class="pad">
+        <div class="meta"><span class="vd">${i.vendor}</span><span class="dt">${fmt(i.date)}</span></div>
+        <h3>${i.title}</h3>
+        <div class="tags">${tags}</div>
+        <div class="whyline"><b>Why it matters</b>${strip(i.why)}</div>
+      </div></button>`;
+  }).join("") : `<div class="empty"><p>Nothing matches those filters.</p>
+      <span class="mono">Try clearing the search or widening the date range.</span></div>`;
+}
+
+/* --- drawer --- */
+let lastFocus = null;
+function open(idx){
+  const i = ITEMS[idx];
+  lastFocus = document.activeElement;
+  const tags = i.types.map(t => { const [,label,sev]=typeMeta(t); return `<span class="tag ${sev||""}">${label}</span>`; }).join("");
+  $("#drwin").innerHTML = `
+    <button class="x" id="closeD" aria-label="Close">×</button>
+    <div class="dmeta"><span class="vd mono" style="font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase">${i.vendor}</span>
+      <span class="dt mono" style="font-size:11px;color:var(--muted)">${fmt(i.date)}</span></div>
+    <h2 id="dtitle">${i.title}</h2>
+    <div class="tags">${tags}</div>
+    <p class="dbody">${i.body}</p>
+    <div class="dwhy"><b>Why it matters to you</b>${i.why}</div>
+    ${i.caveat ? `<p class="caveat">${i.caveat}</p>` : ""}
+    ${i.src.length ? `<div class="dsrc"><span class="lbl">Primary source${i.src.length>1?"s":""}</span>
+      ${i.src.map(s => `<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`).join("")}</div>` : ""}`;
+  $("#drw").classList.add("on"); $("#scrim").classList.add("on");
+  $("#drw").focus();
+  $("#closeD").onclick = close;
+}
+function close(){
+  $("#drw").classList.remove("on"); $("#scrim").classList.remove("on");
+  if (lastFocus) lastFocus.focus();
+}
+
+/* --- events --- */
+document.addEventListener("click", e => {
+  const card = e.target.closest(".c");
+  if (card){ open(+card.dataset.i); return; }
+  const f = e.target.closest("button.f");
+  if (f && !f.id){
+    if (f.dataset.g){
+      const set = state[f.dataset.g], k = f.dataset.k;
+      set.has(k) ? set.delete(k) : set.add(k);
+      f.setAttribute("aria-pressed", set.has(k));
+    } else if (f.dataset.t !== undefined){
+      state.days = +f.dataset.t;
+      $("#fTime").querySelectorAll("button.f[data-t]").forEach(b =>
+        b.setAttribute("aria-pressed", b === f));
+    }
+    render();
+  }
+});
+$("#scrim").onclick = close;
+document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+
+$("#q").addEventListener("input", e => {
+  state.q = e.target.value.trim();
+  $("#clr").hidden = !state.q;
+  render();
+});
+$("#clr").onclick = () => { $("#q").value=""; state.q=""; $("#clr").hidden=true; render(); $("#q").focus(); };
+$("#sort").onchange = e => { state.sort = e.target.value; render(); };
+$("#reset").onclick = () => {
+  state.q=""; state.cats.clear(); state.types.clear(); state.days=0; state.sort="date";
+  $("#q").value=""; $("#clr").hidden=true; $("#sort").value="date";
+  document.querySelectorAll("button.f[data-g]").forEach(b => b.setAttribute("aria-pressed","false"));
+  $("#fTime").querySelectorAll("button.f[data-t]").forEach(b => b.setAttribute("aria-pressed", b.dataset.t==="0"));
+  render();
+};
+
+render();
+</script>
+
+</body></html>
