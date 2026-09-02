@@ -4,7 +4,7 @@ Archive and public site for the FDE Signal Scan, a tri-weekly research digest co
 MCP and agent protocols, voice AI, CCaaS, agent frameworks and observability, frontier
 models and hardware, and two discovery lanes for emerging tools and new technique.
 
-**Site:** https://odiobiak.github.io/fde-signal-scan/
+**Site:** <https://odiobiak.github.io/fde-signal-scan/>
 
 ## How it works
 
@@ -33,7 +33,7 @@ The alternative would be granting Full Disk Access to `/bin/bash`, which is too 
 
 ## Layout
 
-```
+```text
 editions/
   YYYY-MM-DD-edition-NNN.html   Claude artifact body fragment, saved verbatim
   YYYY-MM-DD-edition-NNN.md     full edition as markdown
@@ -41,10 +41,23 @@ build.py                        wraps fragments into standalone pages, builds th
 .github/workflows/pages.yml     builds on push to main, deploys to Pages
 ```
 
-An artifact fragment starts at `<title>` with no `<!doctype>`, `<html>`, `<head>` or
-`<body>` — the artifact host supplies those at publish time. `build.py` adds the
-equivalent skeleton, hoists the fragment's `<title>` and stylesheet links into `<head>`,
-and prepends a nav bar that inherits the edition's own CSS custom properties.
+Editions arrive in either of two shapes and `build.py` accepts both:
+
+- a **body fragment** starting at `<title>`, with no `<!doctype>`, `<html>`, `<head>` or
+  `<body>` — the artifact host supplies those at publish time;
+- the **whole published document**, headed by the host's frame-runtime bootstrap. That
+  script postMessages to a parent frame that does not exist on Pages, so it is dropped
+  along with the rest of the host's `<head>`.
+
+`build.py` reduces either to the fragment, adds the equivalent skeleton, hoists the
+`<title>` and stylesheet links into `<head>`, and prepends a nav bar that inherits the
+edition's own CSS custom properties.
+
+An edition can also be markdown-only. The artifact is rewritten in place each run, so if
+its HTML was never captured before the next scan overwrote it, only the markdown archive
+survives — edition 002 is exactly that. Those still get an archive row, without a page
+link. Note that edition 001 predates the data-driven redesign and is a static page; the
+search-and-filter interface starts at 003.
 
 ## Build locally
 
